@@ -988,7 +988,44 @@
             initCharts();
             setupEventListeners();
         }
-
+function handleTransactionSubmit(e) {
+    e.preventDefault();
+    
+    // 1. Pobierz dane z formularza
+    const type = document.querySelector('input[name="type"]:checked').value;
+    const title = document.getElementById('title').value;
+    const amount = parseFloat(document.getElementById('amount').value);
+    const category = document.getElementById('category').value;
+    const date = document.getElementById('date').value;
+    const notes = document.getElementById('notes').value;
+    const id = document.getElementById('transactionId').value || firebase.database().ref().child('transactions').push().key;
+    
+    // 2. Stwórz obiekt transakcji
+    const transaction = {
+        id,
+        type,
+        title,
+        amount,
+        category,
+        date,
+        notes: notes || "", // Zabezpieczenie przed null/undefined
+        createdAt: firebase.database.ServerValue.TIMESTAMP
+    };
+    
+    // 3. Zapisz do Firebase
+    const updates = {};
+    updates['/transactions/' + id] = transaction;
+    
+    firebase.database().ref().update(updates)
+        .then(() => {
+            console.log("Zapisano transakcję:", transaction);
+            closeModal();
+        })
+        .catch((error) => {
+            console.error("Błąd zapisu:", error);
+            alert("Wystąpił błąd podczas zapisywania: " + error.message);
+        });
+}
         // Konfiguracja event listenerów
         function setupEventListeners() {
             // Nawigacja
@@ -1118,9 +1155,8 @@ function openModal(transaction = null) {
         }
 
         // Ustawienia formularza
-        if (transaction) {
-            // Tryb edycji
-            document.getElementById('transactionId').value = transaction.id;
+        if (!transaction) {
+            document.getElementById('transactionId').value = '';
             document.getElementById('title').value = transaction.title;
             document.getElementById('amount').value = transaction.amount;
             document.getElementById('category').value = transaction.category;
@@ -1717,4 +1753,5 @@ if (transactionIdInput.value) {
     </script>
 </body>
 </html>
+
 
