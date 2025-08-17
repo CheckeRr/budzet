@@ -626,6 +626,7 @@
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
 </head>
@@ -637,8 +638,11 @@
                 <span>Smart Budget</span>
             </div>
             <div class="user-actions">
-                <button class="btn btn-primary" id="saveDataBtn">
-                    <i class="fas fa-save"></i> Zapisz dane
+                <button class="btn btn-primary" id="exportBackupBtn">
+                    <i class="fas fa-file-export"></i> Eksportuj dane
+                </button>
+                <button class="btn btn-outline" id="importBackupBtn">
+                    <i class="fas fa-file-import"></i> Importuj dane
                 </button>
             </div>
         </header>
@@ -926,18 +930,21 @@
     </div>
 
     <script>
-const firebaseConfig = {
-  apiKey: "AIzaSyC7E-c2Rv20oTrDGji-no3GefWKOsX7lpE",
-  authDomain: "budzet-a9f1e.firebaseapp.com",
-  databaseURL: "https://budzet-a9f1e-default-rtdb.europe-west1.firebasedatabase.app/",  // Ważne: Sprawdź URL w Firebase Console!
-  projectId: "budzet-a9f1e",
-  storageBucket: "budzet-a9f1e.firebasestorage.app",
-  messagingSenderId: "445564382718",
-  appId: "1:445564382718:web:cf3dd563daf6b9e0c124af"
-};
+        // Konfiguracja Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyC7E-c2Rv20oTrDGji-no3GefWKOsX7lpE",
+            authDomain: "budzet-a9f1e.firebaseapp.com",
+            databaseURL: "https://budzet-a9f1e-default-rtdb.firebaseio.com",
+            projectId: "budzet-a9f1e",
+            storageBucket: "budzet-a9f1e.firebasestorage.app",
+            messagingSenderId: "445564382718",
+            appId: "1:445564382718:web:cf3dd563daf6b9e0c124af"
+        };
 
-firebase.initializeApp(firebaseConfig);
-const database = firebase.database();
+        // Inicjalizacja Firebase
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const transactionsRef = database.ref('transactions');
 
         // Główne dane aplikacji
         let transactions = [];
@@ -954,7 +961,6 @@ const database = firebase.database();
         const cancelBtn = document.getElementById('cancelBtn');
         const transactionForm = document.getElementById('transactionForm');
         const transactionsList = document.getElementById('transactionsList');
-        const saveDataBtn = document.getElementById('saveDataBtn');
         const filterBtns = document.querySelectorAll('.filter-btn');
         const modalTitle = document.getElementById('modalTitle');
         const submitBtn = document.getElementById('submitBtn');
@@ -970,28 +976,18 @@ const database = firebase.database();
 
         // Inicjalizacja aplikacji
         function initApp() {
-            loadTransactions();
+            // Nasłuchuj zmian w bazie danych Firebase
+            transactionsRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                transactions = data ? Object.values(data) : [];
+                renderTransactions();
+                updateSummary();
+                updateCalendar();
+            });
+
             initCharts();
             setupEventListeners();
-            updateCalendar();
         }
-
-function saveTransactions(transactions) {
-  database.ref('transactions').set(transactions)
-    .then(() => console.log("Dane zapisane!"))
-    .catch((error) => console.error("Błąd zapisu:", error));
-}
-
-// ODCZYTAJ transakcje
-function loadTransactions(callback) {
-  database.ref('transactions').once('value')
-    .then((snapshot) => {
-      const data = snapshot.val() || [];
-      callback(data);
-    })
-    .catch((error) => console.error("Błąd odczytu:", error));
-}
-});
 
         // Konfiguracja event listenerów
         function setupEventListeners() {
@@ -1062,6 +1058,55 @@ function loadTransactions(callback) {
                 updateCalendar();
             });
 
+            // Eksport danych
+            exportBackupBtn.addEventListener('click', () => {
+                const dataStr = JSON.stringify(transactions, null, 2);
+                const blob = new Blob([dataStr], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = 'budget_backup.json';
+                a.click();
+                URL.revokeObjectURL(url);
+            });
+
+            // Import danych
+            importBackupBtn.addEventListener('click', () => {
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = '.json';
+                
+                input.onchange = e => {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    
+                    const reader = new FileReader();
+                    reader.onload = event => {
+                        try {
+                            const data = JSON.parse(event.target.result);
+                            if (Array.isArray(data)) {
+                                // Zapisz wszystkie transakcje do Firebase
+                                const updates = {};
+                                data.forEach(transaction => {
+                                    updates[transaction.id] = transaction;
+                                });
+                                transactionsRef.update(updates)
+                                    .then(() => alert('Dane zostały zaimportowane pomyślnie!'))
+                                    .catch(error => alert('Błąd podczas importowania danych: ' + error.message));
+                            } else {
+                                alert('Nieprawidłowy format pliku. Oczekiwano tablicy transakcji.');
+                            }
+                        } catch (error) {
+                            alert('Błąd podczas wczytywania pliku: ' + error.message);
+                        }
+                    };
+                    reader.readAsText(file);
+                };
+                
+                input.click();
+            });
+        }
 
         // Otwórz modal transakcji
         function openModal(transaction = null) {
@@ -1075,7 +1120,6 @@ function loadTransactions(callback) {
                 document.getElementById('category').value = transaction.category;
                 document.getElementById('date').value = transaction.date;
                 document.getElementById('notes').value = transaction.notes || '';
-                
                 if (transaction.type === 'income') {
                     document.getElementById('incomeType').checked = true;
                 } else {
