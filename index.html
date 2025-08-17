@@ -1109,37 +1109,51 @@
         }
 
         // Otwórz modal transakcji
-        function openModal(transaction = null) {
-            if (transaction) {
-                // Tryb edycji
-                modalTitle.textContent = 'Edytuj transakcję';
-                submitBtn.textContent = 'Zapisz zmiany';
-                transactionIdInput.value = transaction.id;
-                document.getElementById('title').value = transaction.title;
-                document.getElementById('amount').value = transaction.amount;
-                document.getElementById('category').value = transaction.category;
-                document.getElementById('date').value = transaction.date;
-                document.getElementById('notes').value = transaction.notes || '';
-                if (transaction.type === 'income') {
-                    document.getElementById('incomeType').checked = true;
-                } else {
-                    document.getElementById('expenseType').checked = true;
-                }
-                
-                updateCategoryOptions();
-            } else {
-                // Tryb dodawania
-                modalTitle.textContent = 'Dodaj nową transakcję';
-                submitBtn.textContent = 'Dodaj transakcję';
-                transactionForm.reset();
-                document.getElementById('date').value = new Date().toISOString().split('T')[0];
+function openModal(transaction = null) {
+    try {
+        // Debugowanie - sprawdź czy modal istnieje
+        const modal = document.getElementById('transactionModal');
+        if (!modal) {
+            throw new Error("Modal transactionModal nie został znaleziony w DOM");
+        }
+
+        // Ustawienia formularza
+        if (transaction) {
+            // Tryb edycji
+            document.getElementById('transactionId').value = transaction.id;
+            document.getElementById('title').value = transaction.title;
+            document.getElementById('amount').value = transaction.amount;
+            document.getElementById('category').value = transaction.category;
+            document.getElementById('date').value = transaction.date;
+            document.getElementById('notes').value = transaction.notes || '';
+            
+            if (transaction.type === 'income') {
                 document.getElementById('incomeType').checked = true;
-                updateCategoryOptions();
+            } else {
+                document.getElementById('expenseType').checked = true;
             }
             
-            transactionModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
+            document.getElementById('modalTitle').textContent = 'Edytuj transakcję';
+            document.getElementById('submitBtn').textContent = 'Zapisz zmiany';
+        } else {
+            // Tryb dodawania
+            document.getElementById('transactionForm').reset();
+            document.getElementById('incomeType').checked = true;
+            document.getElementById('date').value = new Date().toISOString().split('T')[0];
+            document.getElementById('modalTitle').textContent = 'Dodaj nową transakcję';
+            document.getElementById('submitBtn').textContent = 'Dodaj transakcję';
         }
+        
+        updateCategoryOptions();
+        transactionModal.classList.add('active');
+        document.body.style.overflow = 'hidden';
+        
+        console.log("Modal otwarty poprawnie");
+    } catch (error) {
+        console.error("Błąd podczas otwierania modala:", error);
+        alert("Wystąpił błąd podczas otwierania formularza.");
+    }
+}
 
         // Zamknij modal
         function closeModal() {
@@ -1703,3 +1717,4 @@ if (transactionIdInput.value) {
     </script>
 </body>
 </html>
+
