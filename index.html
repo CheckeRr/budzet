@@ -677,7 +677,8 @@
                     <li>
                         <a href="#" data-section="settings">
                             <i class="fas fa-cog"></i>
-                            <span>Ustawienia</span </a>
+                            <span>Ustawienia</span>
+                        </a>
                     </li>
                 </ul>
             </aside>
@@ -931,13 +932,13 @@
     <script>
         // Konfiguracja Firebase
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
-            databaseURL: "https://YOUR_PROJECT_ID.firebaseio.com",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_PROJECT_ID.appspot.com",
-            messagingSenderId: "YOUR_SENDER_ID",
-            appId: "YOUR_APP_ID"
+            apiKey: "AIzaSyC7E-c2Rv20oTrDGji-no3GefWKOsX7lpE",
+            authDomain: "budzet-a9f1e.firebaseapp.com",
+            databaseURL: "https://budzet-a9f1e-default-rtdb.europe-west1.firebasedatabase.app/",
+            projectId: "budzet-a9f1e",
+            storageBucket: "budzet-a9f1e.firebasestorage.app",
+            messagingSenderId: "445564382718",
+            appId: "1:445564382718:web:cf3dd563daf6b9e0c124af"
         };
 
         // Inicjalizacja Firebase
@@ -1172,37 +1173,37 @@
         }
 
         // Obsługa formularza transakcji
-        function handleTransactionSubmit(e) {
-            e.preventDefault();
-            
-            const type = document.querySelector('input[name="type"]:checked').value;
-            const title = document.getElementById('title').value;
-            const amount = parseFloat(document.getElementById('amount').value);
-            const category = document.getElementById('category').value;
-            const date = document.getElementById('date').value;
-            const notes = document.getElementById('notes').value;
-            const id = transactionIdInput.value || Date.now().toString();
-            
-            const transaction = {
-                id,
-                type,
-                title,
-                amount,
-                category,
-                date,
-                notes
-            };
-            
-            // Zapisz transakcje do Firebase
-            transactionsRef.child(id).set(transaction)
-                .then(() => {
-                    renderTransactions();
-                    updateSummary();
-                    updateCalendar();
-                    closeModal();
-                })
-                .catch(error => alert('Błąd podczas zapisywania transakcji: ' + error.message));
-        }
+if (transactionIdInput.value) {
+    // Edycja istniejącej transakcji
+    database.ref('transactions/' + transaction.id).set(transaction)
+        .then(() => {
+            console.log("Transakcja zaktualizowana!");
+            renderTransactions();
+            updateSummary();
+            updateCalendar();
+            closeModal();
+        })
+        .catch((error) => {
+            console.error("Błąd podczas aktualizacji transakcji:", error);
+            alert("Wystąpił błąd podczas zapisywania transakcji.");
+        });
+} else {
+    // Dodanie nowej transakcji
+    const newTransactionRef = database.ref('transactions').push();
+    transaction.id = newTransactionRef.key; // Nadaj unikalne ID
+    newTransactionRef.set(transaction)
+        .then(() => {
+            console.log("Transakcja dodana!");
+            renderTransactions();
+            updateSummary();
+            updateCalendar();
+            closeModal();
+        })
+        .catch((error) => {
+            console.error("Błąd podczas dodawania transakcji:", error);
+            alert("Wystąpił błąd podczas dodawania transakcji.");
+        });
+}
 
         // Renderuj listę transakcji
         function renderTransactions(filter = 'all') {
@@ -1269,14 +1270,11 @@
                 btn.addEventListener('click', (e) => {
                     const id = e.currentTarget.getAttribute('data-id');
                     if (confirm('Czy na pewno chcesz usunąć tę transakcję?')) {
-                        transactionsRef.child(id).remove()
-                            .then(() => {
-                                transactions = transactions.filter(t => t.id !== id);
-                                renderTransactions();
-                                updateSummary();
-                                updateCalendar();
-                            })
-                            .catch(error => alert('Błąd podczas usuwania transakcji: ' + error.message));
+                        transactions = transactions.filter(t => t.id !== id);
+                        saveTransactions();
+                        renderTransactions();
+                        updateSummary();
+                        updateCalendar();
                     }
                 });
             });
@@ -1314,10 +1312,32 @@
             
             const currentBalance = currentMonthIncome - currentMonthExpense;
             
+            // Oblicz przychody i wydatki z poprzedniego miesiąca
+            let prevMonth = currentMonth - 1;
+            let prevYear = currentYear;
+            if (prevMonth < 0) {
+                prevMonth = 11;
+                prevYear--;
+            }
+            
+            const prevMonthIncome = transactions
+                .filter(t => t.type === 'income' && 
+                      new Date(t.date).getMonth() === prevMonth && 
+                      new Date(t.date).getFullYear() === prevYear)
+                .reduce((sum, t) => sum + t.amount, 0);
+            
+            const prevMonthExpense = transactions
+                .filter(t => t.type === 'expense' && 
+                      new Date(t.date).getMonth() === prevMonth && 
+                      new Date(t.date).getFullYear() === prevYear)
+                .reduce((sum, t) => sum + t.amount, 0);
+            
+            const prevMonthBalance = prevMonthIncome - prevMonthExpense;
+            
             // Oblicz zmiany procentowe
-            const incomeChange = currentMonthIncome === 0 ? 0 : ((currentMonthIncome - currentMonthIncome) / currentMonthIncome * 100);
-            const expenseChange = currentMonthExpense === 0 ? 0 : ((currentMonthExpense - currentMonthExpense) / currentMonthExpense * 100);
-            const balanceChange = currentBalance === 0 ? 0 : ((currentBalance - currentBalance) / currentBalance * 100);
+            const incomeChange = prevMonthIncome === 0 ? 0 : ((currentMonthIncome - prevMonthIncome) / prevMonthIncome * 100);
+            const expenseChange = prevMonthExpense === 0 ? 0 : ((currentMonthExpense - prevMonthExpense) / prevMonthExpense * 100);
+            const balanceChange = prevMonthBalance === 0 ? 0 : ((currentBalance - prevMonthBalance) / prevMonthBalance * 100);
             
             // Aktualizuj UI
             document.getElementById('monthlyIncome').textContent = currentMonthIncome.toFixed(2) + ' zł';
@@ -1327,6 +1347,15 @@
             document.getElementById('incomeChange').textContent = Math.abs(incomeChange).toFixed(1) + '%';
             document.getElementById('expenseChange').textContent = Math.abs(expenseChange).toFixed(1) + '%';
             document.getElementById('balanceChange').textContent = Math.abs(balanceChange).toFixed(1) + '%';
+            
+            // Aktualizuj style zmian
+            const incomeChangeEl = document.querySelector('#incomeCard .card-change');
+            const expenseChangeEl = document.querySelector('#expenseCard .card-change');
+            const balanceChangeEl = document.querySelector('#balanceCard .card-change');
+            
+            incomeChangeEl.className = 'card-change ' + (incomeChange > 0 ? 'positive' : incomeChange < 0 ? 'negative' : 'neutral');
+            expenseChangeEl.className = 'card-change ' + (expenseChange > 0 ? 'negative' : expenseChange < 0 ? 'positive' : 'neutral');
+            balanceChangeEl.className = 'card-change ' + (balanceChange > 0 ? 'positive' : balanceChange < 0 ? 'negative' : 'neutral');
             
             // Przygotuj dane do wykresów (ostatnie 6 miesięcy)
             const months = [];
@@ -1595,7 +1624,7 @@
                 'health': 'fa-heartbeat',
                 'other-expense': 'fa-receipt'
             };
-            return icons[category] || ' fa-money-bill-wave';
+            return icons[category] || 'fa-money-bill-wave';
         }
 
         function getCategoryName(category) {
@@ -1673,4 +1702,4 @@
         initApp();
     </script>
 </body>
-</html> You have reached your request limit for the hour. [Upgrade for higher rate limits](https://www.blackbox.ai/pricing?ref=rate-limit) You have reached your request limit for the hour. [Upgrade for higher rate limits](https://www.blackbox.ai/pricing?ref=rate-limit)
+</html>
