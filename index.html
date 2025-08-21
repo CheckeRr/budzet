@@ -395,6 +395,7 @@
         .modal-title {
             font-size: 20px;
             font-weight: 600;
+            color: var(--dark-color);
         }
 
         .close-modal {
@@ -418,6 +419,7 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
+            color: var(--dark-color);
         }
 
         .form-control {
@@ -427,6 +429,7 @@
             border-radius: var(--border-radius);
             font-size: 16px;
             transition: var(--transition);
+            background-color: white;
         }
 
         .form-control:focus {
@@ -677,12 +680,42 @@
             color: white;
         }
 
+        .analytics-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .analytics-tab {
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            background-color: #f0f4f8;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .analytics-tab.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
         @media (max-width: 992px) {
             .dashboard {
                 grid-template-columns: 1fr;
             }
 
             .summary-cards {
+                grid-template-columns: 1fr;
+            }
+
+            .analytics-grid {
                 grid-template-columns: 1fr;
             }
         }
@@ -696,13 +729,51 @@
         .fade-in {
             animation: fadeIn 0.5s ease-in-out;
         }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            box-shadow: var(--box-shadow);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background-color: #f0f4f8;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
+        }
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 </head>
 <body>
     <div class="container">
@@ -712,12 +783,7 @@
                 <span>Smart Budget</span>
             </div>
             <div class="user-actions">
-                <button class="btn btn-outline" id="logoutBtn" style="display: none;">
-                    <i class="fas fa-sign-out-alt"></i> Wyloguj
-                </button>
-                <div id="userInfo" style="display: none;">
-                    <span>Tryb anonimowy</span>
-                </div>
+                <span>Tryb jednoosobowy</span>
             </div>
         </header>
 
@@ -890,9 +956,104 @@
                 <!-- Sekcja Analiza -->
                 <div class="content-section" id="analytics-section">
                     <div class="card">
-                        <h3 class="section-title">Analiza finansowa</h3>
-                        <div class="chart-container" style="height: 400px;">
-                            <canvas id="analyticsChart"></canvas>
+                        <div class="card-header">
+                            <h3 class="section-title">Analiza finansowa</h3>
+                            <div class="analytics-tabs">
+                                <button class="analytics-tab active" data-tab="expenses">Wydatki</button>
+                                <button class="analytics-tab" data-tab="income">Przychody</button>
+                                <button class="analytics-tab" data-tab="trends">Trendy</button>
+                            </div>
+                        </div>
+                        
+                        <div class="analytics-content">
+                            <div class="analytics-tab-content active" id="expenses-tab">
+                                <div class="stats-grid">
+                                    <div class="stat-card">
+                                        <div class="stat-value" id="totalExpenses">0 zł</div>
+                                        <div class="stat-label">Łączne wydatki</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-value" id="avgExpenses">0 zł</div>
+                                        <div class="stat-label">Średnio miesięcznie</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-value" id="largestExpense">0 zł</div>
+                                        <div class="stat-label">Największy wydatek</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="analytics-grid">
+                                    <div class="card">
+                                        <h4>Podział wydatków według kategorii</h4>
+                                        <div class="chart-container" style="height: 300px;">
+                                            <canvas id="expensesChart"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <h4>Top 5 kategorii wydatków</h4>
+                                        <div id="topExpensesList"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="card">
+                                    <h4>Wydatki w czasie</h4>
+                                    <div class="chart-container" style="height: 300px;">
+                                        <canvas id="expensesOverTimeChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="analytics-tab-content" id="income-tab">
+                                <div class="stats-grid">
+                                    <div class="stat-card">
+                                        <div class="stat-value" id="totalIncome">0 zł</div>
+                                        <div class="stat-label">Łączne przychody</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-value" id="avgIncome">0 zł</div>
+                                        <div class="stat-label">Średnio miesięcznie</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-value" id="largestIncome">0 zł</div>
+                                        <div class="stat-label">Największy przychód</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="analytics-grid">
+                                    <div class="card">
+                                        <h4>Podział przychodów według kategorii</h4>
+                                        <div class="chart-container" style="height: 300px;">
+                                            <canvas id="incomeChartAnalytics"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <h4>Top 5 kategorii przychodów</h4>
+                                        <div id="topIncomeList"></div>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="analytics-tab-content" id="trends-tab">
+                                <div class="card">
+                                    <h4>Trendy finansowe</h4>
+                                    <div class="chart-container" style="height: 400px;">
+                                        <canvas id="trendsChart"></canvas>
+                                    </div>
+                                </div>
+                                
+                                <div class="analytics-grid">
+                                    <div class="card">
+                                        <h4>Bilans miesięczny</h4>
+                                        <div class="chart-container" style="height: 300px;">
+                                            <canvas id="balanceTrendChart"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <h4>Procentowy udział wydatków</h4>
+                                        <div id="expenseRatioStats"></div>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -976,8 +1137,9 @@
 
                             <div class="settings-group">
                                 <h4 class="settings-title">Informacje</h4>
-                                <p>Wersja aplikacji: 1.1.0</p>
+                                <p>Wersja aplikacji: 1.2.0</p>
                                 <p>Autor: Smart Budget Team</p>
+                                <p>Tryb: Jednoosobowy</p>
                             </div>
                         </div>
                     </div>
@@ -1102,20 +1264,21 @@
     <script>
         // Konfiguracja Firebase
         const firebaseConfig = {
-            // Tutaj wstaw swoją konfigurację Firebase
-            apiKey: "AIzaSyCtbSd7qG2tKkqOhMPBLewth3CnSzrTFmY",
-            authDomain: "budzet-5782a.firebaseapp.com",
-            databaseURL: "https://budzet-5782a-default-rtdb.firebaseio.com",
-            projectId: "budzet-5782a",
-            storageBucket: "budzet-5782a.firebasestorage.app",
-            messagingSenderId: "516868712666",
-            appId: "1:516868712666:web:197d2afbc38d828a955de3"
+            apiKey: "YOUR_API_KEY",
+            authDomain: "your-project-id.firebaseapp.com",
+            databaseURL: "https://your-project-id-default-rtdb.firebaseio.com",
+            projectId: "your-project-id",
+            storageBucket: "your-project-id.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
         };
 
         // Inicjalizacja Firebase
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
-        const auth = firebase.auth();
+
+        // STAŁY identyfikator użytkownika - tryb jednoosobowy
+        const userId = "single_user_account";
 
         // Główne dane aplikacji
         let transactions = [];
@@ -1124,10 +1287,10 @@
         let currentYear = new Date().getFullYear();
         let editingTransactionId = null;
         let editingCategoryId = null;
-        let incomeChart, expenseChart, balanceChart, analyticsChart;
-        let userId = null;
+        let incomeChart, expenseChart, balanceChart, expensesChart, incomeChartAnalytics, expensesOverTimeChart, trendsChart, balanceTrendChart;
         let currentHistoryPage = 1;
         const transactionsPerPage = 10;
+        let currentAnalyticsTab = 'expenses';
 
         // Domyślne kategorie
         const defaultCategories = [
@@ -1165,8 +1328,6 @@
         const calendarGrid = document.getElementById('calendarGrid');
         const exportBackupBtn = document.getElementById('exportBackupBtn');
         const importBackupBtn = document.getElementById('importBackupBtn');
-        const logoutBtn = document.getElementById('logoutBtn');
-        const userInfo = document.getElementById('userInfo');
         const addCategoryBtn = document.getElementById('addCategoryBtn');
         const categoriesList = document.getElementById('categoriesList');
         const categoryModal = document.getElementById('categoryModal');
@@ -1181,73 +1342,20 @@
         const historyCategory = document.getElementById('historyCategory');
         const applyHistoryFilters = document.getElementById('applyHistoryFilters');
         const historyPagination = document.getElementById('historyPagination');
+        const analyticsTabs = document.querySelectorAll('.analytics-tab');
+        const analyticsTabContents = document.querySelectorAll('.analytics-tab-content');
 
         // Inicjalizacja aplikacji
         function initApp() {
             initCharts();
             setupEventListeners();
-            checkAuthState();
+            loadTransactions();
+            loadCategories();
             populateYearFilter();
-        }
-
-        // Sprawdź stan autoryzacji
-        function checkAuthState() {
-            auth.onAuthStateChanged((user) => {
-                if (user) {
-                    userId = user.uid;
-                    logoutBtn.style.display = 'block';
-                    userInfo.style.display = 'block';
-                    loadTransactions();
-                    loadCategories();
-                } else {
-                    loginAnonymously();
-                }
-            });
-        }
-
-        // Logowanie anonimowe
-        function loginAnonymously() {
-            auth.signInAnonymously()
-                .then((userCredential) => {
-                    userId = userCredential.user.uid;
-                    logoutBtn.style.display = 'block';
-                    userInfo.style.display = 'block';
-                    loadTransactions();
-                    loadCategories();
-                })
-                .catch((error) => {
-                    console.error('Błąd logowania anonimowego:', error);
-                    userId = null;
-                    logoutBtn.style.display = 'none';
-                    userInfo.style.display = 'none';
-                    transactions = [];
-                    categories = [];
-                    renderTransactions();
-                    updateSummary();
-                    renderCategories();
-                });
-        }
-
-        // Wylogowanie
-        function logout() {
-            auth.signOut().then(() => {
-                userId = null;
-                logoutBtn.style.display = 'none';
-                userInfo.style.display = 'none';
-                transactions = [];
-                categories = [];
-                renderTransactions();
-                updateSummary();
-                renderCategories();
-            }).catch((error) => {
-                console.error('Błąd wylogowania:', error);
-            });
         }
 
         // Ładowanie transakcji z Firebase
         function loadTransactions() {
-            if (!userId) return;
-            
             const transactionsRef = database.ref(`users/${userId}/transactions`);
             transactionsRef.on('value', (snapshot) => {
                 const data = snapshot.val();
@@ -1263,13 +1371,12 @@
                 updateSummary();
                 updateCalendar();
                 updateHistoryFilters();
+                updateAnalytics();
             });
         }
 
         // Ładowanie kategorii z Firebase
         function loadCategories() {
-            if (!userId) return;
-            
             const categoriesRef = database.ref(`users/${userId}/categories`);
             categoriesRef.on('value', (snapshot) => {
                 const data = snapshot.val();
@@ -1291,8 +1398,6 @@
 
         // Zapis domyślnych kategorii
         function saveDefaultCategories() {
-            if (!userId) return;
-            
             const categoriesRef = database.ref(`users/${userId}/categories`);
             categoriesRef.remove(); // Usuń stare kategorie
             
@@ -1308,18 +1413,13 @@
 
         // Zapisywanie transakcji do Firebase
         function saveTransaction(transaction) {
-            if (!userId) {
-                alert('Musisz być zalogowany, aby zapisać transakcję');
-                return;
-            }
-            
             const transactionsRef = database.ref(`users/${userId}/transactions`);
             if (transaction.id) {
                 // Aktualizuj istniejącą transakcję
                 const { id, ...transactionData } = transaction;
                 transactionsRef.child(id).update(transactionData);
             } else {
-                // Dodaj nową transakcję
+                // Dodaj nowę transakcję
                 const newTransactionRef = transactionsRef.push();
                 newTransactionRef.set({
                     type: transaction.type,
@@ -1334,11 +1434,6 @@
 
         // Zapisywanie kategorii do Firebase
         function saveCategory(category) {
-            if (!userId) {
-                alert('Musisz być zalogowany, aby zapisać kategorię');
-                return;
-            }
-            
             const categoriesRef = database.ref(`users/${userId}/categories`);
             if (category.id) {
                 // Aktualizuj istniejącą kategorię
@@ -1358,16 +1453,12 @@
 
         // Usuwanie transakcji z Firebase
         function deleteTransaction(id) {
-            if (!userId) return;
-            
             const transactionRef = database.ref(`users/${userId}/transactions/${id}`);
             transactionRef.remove();
         }
 
         // Usuwanie kategorii z Firebase
         function deleteCategory(id) {
-            if (!userId) return;
-            
             // Sprawdź, czy kategoria jest używana w transakcjach
             const isCategoryUsed = transactions.some(transaction => transaction.category === id);
             
@@ -1384,9 +1475,6 @@
 
         // Konfiguracja event listenerów
         function setupEventListeners() {
-            // Logowanie/wylogowanie
-            logoutBtn.addEventListener('click', logout);
-
             // Nawigacja
             navLinks.forEach(link => {
                 link.addEventListener('click', (e) => {
@@ -1403,7 +1491,7 @@
                     
                     // Specjalne akcje dla sekcji
                     if (section === 'analytics') {
-                        updateAnalyticsChart();
+                        updateAnalytics();
                     } else if (section === 'calendar') {
                         updateCalendar();
                     } else if (section === 'history') {
@@ -1492,15 +1580,18 @@
                 currentHistoryPage = 1;
                 renderHistory();
             });
+
+            // Analytics tabs
+            analyticsTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabName = tab.getAttribute('data-tab');
+                    switchAnalyticsTab(tabName);
+                });
+            });
         }
 
         // Otwórz modal transakcji
         function openTransactionModal(transaction = null) {
-            if (!userId) {
-                alert('Musisz być zalogowany, aby dodawać transakcje');
-                return;
-            }
-            
             if (transaction) {
                 // Tryb edycji
                 modalTitle.textContent = 'Edytuj transakcję';
@@ -1542,11 +1633,6 @@
 
         // Otwórz modal kategorii
         function openCategoryModal(category = null) {
-            if (!userId) {
-                alert('Musisz być zalogowany, aby dodawać kategorie');
-                return;
-            }
-            
             if (category) {
                 // Tryb edycji
                 categoryModalTitle.textContent = 'Edytuj kategorię';
@@ -1693,17 +1779,6 @@
 
         // Renderuj listę transakcji
         function renderTransactions(filter = 'all') {
-            if (!userId) {
-                transactionsList.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-user"></i>
-                        <h3>Nie jesteś zalogowany</h3>
-                        <p>Zaloguj się, aby wyświetlić swoje transakcje</p>
-                    </div>
-                `;
-                return;
-            }
-            
             if (transactions.length === 0) {
                 transactionsList.innerHTML = `
                     <div class="empty-state">
@@ -1712,7 +1787,7 @@
                         <p>Dodaj swoją pierwszą transakcję, klikając przycisk poniżej</p>
                         <button class="btn btn-primary" id="addFirstTransactionBtn">
                             <i class="fas fa-plus"></i> Dodaj transakcję
-                        </button>
+                                </button>
                     </div>
                 `;
                 document.getElementById('addFirstTransactionBtn')?.addEventListener('click', () => openTransactionModal());
@@ -1803,17 +1878,6 @@
 
         // Renderuj listę kategorii
         function renderCategories() {
-            if (!userId) {
-                categoriesList.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-user"></i>
-                        <h3>Nie jesteś zalogowany</h3>
-                        <p>Zaloguj się, aby wyświetlić kategorie</p>
-                    </div>
-                `;
-                return;
-            }
-            
             if (categories.length === 0) {
                 categoriesList.innerHTML = `
                     <div class="empty-state">
@@ -1902,23 +1966,12 @@
 
         // Renderuj historię transakcji
         function renderHistory() {
-            if (!userId) {
-                historyList.innerHTML = `
-                    <div class="empty-state">
-                        <i class="fas fa-user"></i>
-                        <h3>Nie jesteś zalogowany</h3>
-                        <p>Zaloguj się, aby wyświetlić historię transakcji</p>
-                    </div>
-                `;
-                return;
-            }
-            
             if (transactions.length === 0) {
                 historyList.innerHTML = `
                     <div class="empty-state">
                         <i class="fas fa-history"></i>
                         <h3>Brak transakcji</h3>
-                        <p>Dodaj swoją pierwszą transakcję, aby zobaczyć historię</p>
+                        <p>Dodaj swoją pierwszę transakcję, aby zobaczyć historię</p>
                     </div>
                 `;
                 historyPagination.innerHTML = '';
@@ -2065,11 +2118,6 @@
 
         // Eksport danych
         function exportData() {
-            if (!userId) {
-                alert('Musisz być zalogowany, aby eksportować dane');
-                return;
-            }
-            
             const data = {
                 transactions: transactions,
                 categories: categories,
@@ -2095,11 +2143,6 @@
 
         // Import danych
         function importData() {
-            if (!userId) {
-                alert('Musisz być zalogowany, aby importować dane');
-                return;
-            }
-            
             const input = document.createElement('input');
             input.type = 'file';
             input.accept = '.json';
@@ -2263,7 +2306,11 @@
             const incomeCtx = document.getElementById('incomeChart').getContext('2d');
             const expenseCtx = document.getElementById('expenseChart').getContext('2d');
             const balanceCtx = document.getElementById('balanceChart').getContext('2d');
-            const analyticsCtx = document.getElementById('analyticsChart').getContext('2d');
+            const expensesCtx = document.getElementById('expensesChart').getContext('2d');
+            const incomeAnalyticsCtx = document.getElementById('incomeChartAnalytics').getContext('2d');
+            const expensesOverTimeCtx = document.getElementById('expensesOverTimeChart').getContext('2d');
+            const trendsCtx = document.getElementById('trendsChart').getContext('2d');
+            const balanceTrendCtx = document.getElementById('balanceTrendChart').getContext('2d');
             
             incomeChart = new Chart(incomeCtx, {
                 type: 'line',
@@ -2315,7 +2362,7 @@
                 options: getChartOptions('Saldo')
             });
             
-            analyticsChart = new Chart(analyticsCtx, {
+            expensesChart = new Chart(expensesCtx, {
                 type: 'doughnut',
                 data: {
                     labels: [],
@@ -2346,6 +2393,137 @@
                     }
                 }
             });
+            
+            incomeChartAnalytics = new Chart(incomeAnalyticsCtx, {
+                type: 'doughnut',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        data: [],
+                        backgroundColor: [],
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'right'
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label || '';
+                                    const value = context.raw || 0;
+                                    const total = context.dataset.data.reduce((a, b) => a + b, 0);
+                                    const percentage = Math.round((value / total) * 100);
+                                    return `${label}: ${value.toFixed(2)} zł (${percentage}%)`;
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+            
+            expensesOverTimeChart = new Chart(expensesOverTimeCtx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Wydatki',
+                        data: [],
+                        backgroundColor: '#ff3333',
+                        borderColor: '#ff3333',
+                        borderWidth: 0,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            trendsChart = new Chart(trendsCtx, {
+                type: 'line',
+                data: {
+                    labels: [],
+                    datasets: [
+                        {
+                            label: 'Przychody',
+                            data: [],
+                            borderColor: '#4bb543',
+                            backgroundColor: 'rgba(75, 181, 67, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        },
+                        {
+                            label: 'Wydatki',
+                            data: [],
+                            borderColor: '#ff3333',
+                            backgroundColor: 'rgba(255, 51, 51, 0.1)',
+                            borderWidth: 2,
+                            tension: 0.4,
+                            fill: true
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            balanceTrendChart = new Chart(balanceTrendCtx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Saldo',
+                        data: [],
+                        backgroundColor: '#4cc9f0',
+                        borderColor: '#4cc9f0',
+                        borderWidth: 0,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
         }
 
         // Aktualizuj wykresy
@@ -2363,39 +2541,271 @@
             balanceChart.update();
         }
 
-        // Aktualizuj wykres analityczny
-        function updateAnalyticsChart() {
+        // Aktualizuj analitykę
+        function updateAnalytics() {
             if (transactions.length === 0) return;
             
+            updateExpensesAnalytics();
+            updateIncomeAnalytics();
+            updateTrendsAnalytics();
+        }
+
+        // Aktualizuj analitykę wydatków
+        function updateExpensesAnalytics() {
             // Grupowanie wydatków według kategorii
             const expenseCategories = {};
-            transactions
-                .filter(t => t.type === 'expense')
-                .forEach(t => {
-                    if (!expenseCategories[t.category]) {
-                        expenseCategories[t.category] = 0;
-                    }
-                    expenseCategories[t.category] += t.amount;
-                });
+            const expenseTransactions = transactions.filter(t => t.type === 'expense');
+            
+            expenseTransactions.forEach(t => {
+                if (!expenseCategories[t.category]) {
+                    expenseCategories[t.category] = 0;
+                }
+                expenseCategories[t.category] += t.amount;
+            });
             
             // Przygotowanie danych do wykresu
-            const categories = Object.keys(expenseCategories);
+            const categoryIds = Object.keys(expenseCategories);
             const amounts = Object.values(expenseCategories);
             
             // Kolory dla kategorii
-            const backgroundColors = categories.map(catId => {
+            const backgroundColors = categoryIds.map(catId => {
                 const category = categories.find(c => c.id === catId);
                 return category ? category.color : '#4361ee';
             });
             
-            // Aktualizacja wykresu
-            analyticsChart.data.labels = categories.map(catId => {
+            // Nazwy kategorii (używamy nazw zamiast ID)
+            const categoryNames = categoryIds.map(catId => {
                 const category = categories.find(c => c.id === catId);
                 return category ? category.name : catId;
             });
-            analyticsChart.data.datasets[0].data = amounts;
-            analyticsChart.data.datasets[0].backgroundColor = backgroundColors;
-            analyticsChart.update();
+            
+            // Aktualizacja wykresu
+            expensesChart.data.labels = categoryNames;
+            expensesChart.data.datasets[0].data = amounts;
+            expensesChart.data.datasets[0].backgroundColor = backgroundColors;
+            expensesChart.update();
+            
+            // Aktualizacja statystyk
+            const totalExpenses = amounts.reduce((sum, amount) => sum + amount, 0);
+            const avgExpenses = totalExpenses / (expenseTransactions.length > 0 ? expenseTransactions.length : 1);
+            const largestExpense = Math.max(...amounts, 0);
+            
+            document.getElementById('totalExpenses').textContent = totalExpenses.toFixed(2) + ' zł';
+            document.getElementById('avgExpenses').textContent = avgExpenses.toFixed(2) + ' zł';
+            document.getElementById('largestExpense').textContent = largestExpense.toFixed(2) + ' zł';
+            
+            // Top 5 kategorii wydatków
+            const topExpenses = categoryIds
+                .map(id => ({ id, amount: expenseCategories[id] }))
+                .sort((a, b) => b.amount - a.amount)
+                .slice(0, 5);
+            
+            const topExpensesHTML = topExpenses.map(expense => {
+                const category = categories.find(c => c.id === expense.id);
+                const percentage = (expense.amount / totalExpenses * 100).toFixed(1);
+                return `
+                    <div style="margin-bottom: 10px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span>${category ? category.name : expense.id}</span>
+                            <span>${expense.amount.toFixed(2)} zł (${percentage}%)</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${percentage}%; background-color: ${category ? category.color : '#4361ee'};"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('topExpensesList').innerHTML = topExpensesHTML || '<p>Brak danych</p>';
+            
+            // Wydatki w czasie (ostatnie 6 miesięcy)
+            const months = [];
+            const expensesOverTimeData = [];
+            
+            for (let i = 5; i >= 0; i--) {
+                const date = new Date();
+                date.setMonth(date.getMonth() - i);
+                const month = date.getMonth();
+                const year = date.getFullYear();
+                
+                months.push(getMonthName(month));
+                
+                const monthExpense = expenseTransactions
+                    .filter(t => {
+                        const transactionDate = new Date(t.date);
+                        return transactionDate.getMonth() === month && 
+                               transactionDate.getFullYear() === year;
+                    })
+                    .reduce((sum, t) => sum + t.amount, 0);
+                
+                expensesOverTimeData.push(monthExpense);
+            }
+            
+            expensesOverTimeChart.data.labels = months;
+            expensesOverTimeChart.data.datasets[0].data = expensesOverTimeData;
+            expensesOverTimeChart.update();
+        }
+
+        // Aktualizuj analitykę przychodów
+        function updateIncomeAnalytics() {
+            // Grupowanie przychodów według kategorii
+            const incomeCategories = {};
+            const incomeTransactions = transactions.filter(t => t.type === 'income');
+            
+            incomeTransactions.forEach(t => {
+                if (!incomeCategories[t.category]) {
+                    incomeCategories[t.category] = 0;
+                }
+                incomeCategories[t.category] += t.amount;
+            });
+            
+            // Przygotowanie danych do wykresu
+            const categoryIds = Object.keys(incomeCategories);
+            const amounts = Object.values(incomeCategories);
+            
+            // Kolory dla kategorii
+            const backgroundColors = categoryIds.map(catId => {
+                const category = categories.find(c => c.id === catId);
+                return category ? category.color : '#4361ee';
+            });
+            
+            // Nazwy kategorii (używamy nazw zamiast ID)
+            const categoryNames = categoryIds.map(catId => {
+                const category = categories.find(c => c.id === catId);
+                return category ? category.name : catId;
+            });
+            
+            // Aktualizacja wykresu
+            incomeChartAnalytics.data.labels = categoryNames;
+            incomeChartAnalytics.data.datasets[0].data = amounts;
+            incomeChartAnalytics.data.datasets[0].backgroundColor = backgroundColors;
+            incomeChartAnalytics.update();
+            
+            // Aktualizacja statystyk
+            const totalIncome = amounts.reduce((sum, amount) => sum + amount, 0);
+            const avgIncome = totalIncome / (incomeTransactions.length > 0 ? incomeTransactions.length : 1);
+            const largestIncome = Math.max(...amounts, 0);
+            
+            document.getElementById('totalIncome').textContent = totalIncome.toFixed(2) + ' zł';
+            document.getElementById('avgIncome').textContent = avgIncome.toFixed(2) + ' zł';
+            document.getElementById('largestIncome').textContent = largestIncome.toFixed(2) + ' zł';
+            
+            // Top 5 kategorii przychodów
+            const topIncome = categoryIds
+                .map(id => ({ id, amount: incomeCategories[id] }))
+                .sort((a, b) => b.amount - a.amount)
+                .slice(0, 5);
+            
+            const topIncomeHTML = topIncome.map(income => {
+                const category = categories.find(c => c.id === income.id);
+                const percentage = (income.amount / totalIncome * 100).toFixed(1);
+                return `
+                    <div style="margin-bottom: 10px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span>${category ? category.name : income.id}</span>
+                            <span>${income.amount.toFixed(2)} zł (${percentage}%)</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${percentage}%; background-color: ${category ? category.color : '#4361ee'};"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('topIncomeList').innerHTML = topIncomeHTML || '<p>Brak danych</p>';
+        }
+
+        // Aktualizuj analitykę trendów
+        function updateTrendsAnalytics() {
+            // Przygotuj dane dla trendów (ostatnie 12 miesięcy)
+            const months = [];
+            const incomeData = [];
+            const expenseData = [];
+            const balanceData = [];
+            
+            for (let i = 11; i >= 0; i--) {
+                const date = new Date();
+                date.setMonth(date.getMonth() - i);
+                const month = date.getMonth();
+                const year = date.getFullYear();
+                
+                months.push(getMonthName(month));
+                
+                const monthIncome = transactions
+                    .filter(t => t.type === 'income' && 
+                          new Date(t.date).getMonth() === month && 
+                          new Date(t.date).getFullYear() === year)
+                    .reduce((sum, t) => sum + t.amount, 0);
+                
+                const monthExpense = transactions
+                    .filter(t => t.type === 'expense' && 
+                          new Date(t.date).getMonth() === month && 
+                          new Date(t.date).getFullYear() === year)
+                    .reduce((sum, t) => sum + t.amount, 0);
+                
+                incomeData.push(monthIncome);
+                expenseData.push(monthExpense);
+                balanceData.push(monthIncome - monthExpense);
+            }
+            
+            // Aktualizuj wykres trendów
+            trendsChart.data.labels = months;
+            trendsChart.data.datasets[0].data = incomeData;
+            trendsChart.data.datasets[1].data = expenseData;
+            trendsChart.update();
+            
+            // Aktualizuj wykres bilansu
+            balanceTrendChart.data.labels = months;
+            balanceTrendChart.data.datasets[0].data = balanceData;
+            balanceTrendChart.update();
+            
+            // Oblicz statystyki udziału wydatków
+            const totalIncome = incomeData.reduce((sum, amount) => sum + amount, 0);
+            const totalExpenses = expenseData.reduce((sum, amount) => sum + amount, 0);
+            const expenseRatio = totalIncome > 0 ? (totalExpenses / totalIncome * 100).toFixed(1) : 0;
+            
+            document.getElementById('expenseRatioStats').innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">${expenseRatio}%</div>
+                    <div class="stat-label">Udział wydatków w przychodach</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${(100 - expenseRatio).toFixed(1)}%</div>
+                    <div class="stat-label">Wskaźnik oszczędności</div>
+                </div>
+            `;
+        }
+
+        // Przełącz zakładki w analityce
+        function switchAnalyticsTab(tabName) {
+            currentAnalyticsTab = tabName;
+            
+            // Aktualizuj aktywne zakładki
+            analyticsTabs.forEach(tab => {
+                if (tab.getAttribute('data-tab') === tabName) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+            
+            // Aktualizuj aktywne treści
+            analyticsTabContents.forEach(content => {
+                if (content.id === `${tabName}-tab`) {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+            
+            // Jeśli potrzeba, zaktualizuj dane
+            if (tabName === 'expenses') {
+                updateExpensesAnalytics();
+            } else if (tabName === 'income') {
+                updateIncomeAnalytics();
+            } else if (tabName === 'trends') {
+                updateTrendsAnalytics();
+            }
         }
 
         // Aktualizuj kalendarz
