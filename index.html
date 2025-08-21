@@ -63,6 +63,7 @@
         .user-actions {
             display: flex;
             gap: 15px;
+            align-items: center;
         }
 
         .btn {
@@ -511,6 +512,7 @@
             display: flex;
             gap: 10px;
             margin-bottom: 20px;
+            flex-wrap: wrap;
         }
 
         .filter-btn {
@@ -571,7 +573,7 @@
             border-radius: 3px;
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: nowarp;
+            white-space: nowrap;
         }
 
         .calendar-transaction.income {
@@ -604,6 +606,77 @@
             color: var(--primary-color);
         }
 
+        .categories-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .category-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+        }
+
+        .category-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .category-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .category-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .history-filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .history-filters select {
+            padding: 8px 15px;
+            border-radius: var(--border-radius);
+            border: 1px solid #e0e0e0;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .pagination-btn {
+            padding: 8px 15px;
+            border-radius: var(--border-radius);
+            background-color: #f0f4f8;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .pagination-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
         @media (max-width: 992px) {
             .dashboard {
                 grid-template-columns: 1fr;
@@ -626,9 +699,10 @@
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Dodaj Firebase SDK -->
+    <!-- Firebase SDK -->
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth-compat.js"></script>
 </head>
 <body>
     <div class="container">
@@ -638,12 +712,12 @@
                 <span>Smart Budget</span>
             </div>
             <div class="user-actions">
-                <button class="btn btn-primary" id="loginBtn">
-                    <i class="fas fa-sign-in-alt"></i> Zaloguj
-                </button>
                 <button class="btn btn-outline" id="logoutBtn" style="display: none;">
                     <i class="fas fa-sign-out-alt"></i> Wyloguj
                 </button>
+                <div id="userInfo" style="display: none;">
+                    <span>Tryb anonimowy</span>
+                </div>
             </div>
         </header>
 
@@ -654,6 +728,12 @@
                         <a href="#" class="active" data-section="dashboard">
                             <i class="fas fa-home"></i>
                             <span>Panel główny</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#" data-section="history">
+                            <i class="fas fa-history"></i>
+                            <span>Historia</span>
                         </a>
                     </li>
                     <li>
@@ -764,6 +844,49 @@
                     </div>
                 </div>
 
+                <!-- Sekcja Historia -->
+                <div class="content-section" id="history-section">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="section-title">Historia transakcji</h3>
+                            <div class="history-filters">
+                                <select id="historyMonth">
+                                    <option value="">Wszystkie miesiące</option>
+                                    <option value="0">Styczeń</option>
+                                    <option value="1">Luty</option>
+                                    <option value="2">Marzec</option>
+                                    <option value="3">Kwiecień</option>
+                                    <option value="4">Maj</option>
+                                    <option value="5">Czerwiec</option>
+                                    <option value="6">Lipiec</option>
+                                    <option value="7">Sierpień</option>
+                                    <option value="8">Wrzesień</option>
+                                    <option value="9">Październik</option>
+                                    <option value="10">Listopad</option>
+                                    <option value="11">Grudzień</option>
+                                </select>
+                                <select id="historyYear">
+                                    <option value="">Wszystkie lata</option>
+                                </select>
+                                <select id="historyCategory">
+                                    <option value="">Wszystkie kategorie</option>
+                                </select>
+                                <button class="btn btn-outline" id="applyHistoryFilters">
+                                    <i class="fas fa-filter"></i> Filtruj
+                                </button>
+                            </div>
+                        </div>
+                        <div class="transactions" id="historyList">
+                            <div class="empty-state">
+                                <i class="fas fa-history"></i>
+                                <h3>Brak transakcji</h3>
+                                <p>Nie znaleziono transakcji spełniających kryteria wyszukiwania</p>
+                            </div>
+                        </div>
+                        <div class="pagination" id="historyPagination"></div>
+                    </div>
+                </div>
+
                 <!-- Sekcja Analiza -->
                 <div class="content-section" id="analytics-section">
                     <div class="card">
@@ -798,12 +921,17 @@
                 <!-- Sekcja Kategorie -->
                 <div class="content-section" id="categories-section">
                     <div class="card">
-                        <h3 class="section-title">Zarządzanie kategoriami</h3>
-                        <div id="categoriesContent">
+                        <div class="card-header">
+                            <h3 class="section-title">Zarządzanie kategoriami</h3>
+                            <button class="btn btn-primary" id="addCategoryBtn">
+                                <i class="fas fa-plus"></i> Dodaj kategorię
+                            </button>
+                        </div>
+                        <div class="categories-list" id="categoriesList">
                             <div class="empty-state">
                                 <i class="fas fa-tags"></i>
-                                <h3>Zarządzanie kategoriami</h3>
-                                <p>Tutaj możesz zarządzać swoimi kategoriami przychodów i wydatków</p>
+                                <h3>Brak kategorii</h3>
+                                <p>Dodaj swoje pierwsze kategorie, klikając przycisk powyżej</p>
                             </div>
                         </div>
                     </div>
@@ -848,7 +976,7 @@
 
                             <div class="settings-group">
                                 <h4 class="settings-title">Informacje</h4>
-                                <p>Wersja aplikacji: 1.0.0</p>
+                                <p>Wersja aplikacji: 1.1.0</p>
                                 <p>Autor: Smart Budget Team</p>
                             </div>
                         </div>
@@ -862,6 +990,7 @@
         <i class="fas fa-plus"></i>
     </button>
 
+    <!-- Modal transakcji -->
     <div class="modal" id="transactionModal">
         <div class="modal-content">
             <div class="modal-header">
@@ -892,22 +1021,7 @@
                     <label for="category" class="form-label">Kategoria</label>
                     <select id="category" class="form-control form-select" required>
                         <option value="" disabled selected>Wybierz kategorię</option>
-                        <optgroup label="Przychody">
-                            <option value="salary">Wynagrodzenie</option>
-                            <option value="bonus">Premia</option>
-                            <option value="freelance">Freelance</option>
-                            <option value="investment">Inwestycje</option>
-                            <option value="other-income">Inne</option>
-                        </optgroup>
-                        <optgroup label="Wydatki">
-                            <option value="food">Jedzenie</option>
-                            <option value="transport">Transport</option>
-                            <option value="shopping">Zakupy</option>
-                            <option value="entertainment">Rozrywka</option>
-                            <option value="bills">Rachunki</option>
-                            <option value="health">Zdrowie</option>
-                            <option value="other-expense">Inne</option>
-                        </optgroup>
+                        <!-- Kategorie będą dodawane dynamicznie -->
                     </select>
                 </div>
 
@@ -929,6 +1043,62 @@
         </div>
     </div>
 
+    <!-- Modal kategorii -->
+    <div class="modal" id="categoryModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="categoryModalTitle">Dodaj nową kategorię</h3>
+                <button class="close-modal" id="closeCategoryModalBtn">&times;</button>
+            </div>
+            <form id="categoryForm">
+                <input type="hidden" id="categoryId">
+                
+                <div class="type-toggle">
+                    <input type="radio" id="categoryIncomeType" name="categoryType" value="income" checked>
+                    <label for="categoryIncomeType">Przychód</label>
+                    <input type="radio" id="categoryExpenseType" name="categoryType" value="expense">
+                    <label for="categoryExpenseType">Wydatek</label>
+                </div>
+
+                <div class="form-group">
+                    <label for="categoryName" class="form-label">Nazwa kategorii</label>
+                    <input type="text" id="categoryName" class="form-control" placeholder="np. Jedzenie, Transport" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="categoryIcon" class="form-label">Ikona</label>
+                    <select id="categoryIcon" class="form-control form-select" required>
+                        <option value="" disabled selected>Wybierz ikonę</option>
+                        <option value="fa-utensils">🍴 Jedzenie</option>
+                        <option value="fa-car">🚗 Transport</option>
+                        <option value="fa-shopping-bag">🛍️ Zakupy</option>
+                        <option value="fa-film">🎬 Rozrywka</option>
+                        <option value="fa-file-invoice-dollar">📄 Rachunki</option>
+                        <option value="fa-heartbeat">❤️ Zdrowie</option>
+                        <option value="fa-home">🏠 Dom</option>
+                        <option value="fa-graduation-cap">🎓 Edukacja</option>
+                        <option value="fa-plane">✈️ Podróże</option>
+                        <option value="fa-gift">🎁 Prezenty</option>
+                        <option value="fa-money-bill-wave">💰 Wynagrodzenie</option>
+                        <option value="fa-chart-line">📈 Inwestycje</option>
+                        <option value="fa-gift">🎁 Premia</option>
+                        <option value="fa-laptop-code">💻 Freelance</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="categoryColor" class="form-label">Kolor (opcjonalny)</label>
+                    <input type="color" id="categoryColor" class="form-control" value="#4361ee">
+                </div>
+
+                <div class="btn-group">
+                    <button type="button" class="btn btn-outline" id="cancelCategoryBtn">Anuluj</button>
+                    <button type="submit" class="btn btn-primary" id="submitCategoryBtn">Dodaj kategorię</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <script>
         // Konfiguracja Firebase
         const firebaseConfig = {
@@ -945,14 +1115,35 @@
         // Inicjalizacja Firebase
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
+        const auth = firebase.auth();
 
         // Główne dane aplikacji
         let transactions = [];
+        let categories = [];
         let currentMonth = new Date().getMonth();
         let currentYear = new Date().getFullYear();
         let editingTransactionId = null;
+        let editingCategoryId = null;
         let incomeChart, expenseChart, balanceChart, analyticsChart;
         let userId = null;
+        let currentHistoryPage = 1;
+        const transactionsPerPage = 10;
+
+        // Domyślne kategorie
+        const defaultCategories = [
+            { id: 'salary', name: 'Wynagrodzenie', type: 'income', icon: 'fa-money-bill-wave', color: '#4bb543' },
+            { id: 'bonus', name: 'Premia', type: 'income', icon: 'fa-gift', color: '#9C27B0' },
+            { id: 'freelance', name: 'Freelance', type: 'income', icon: 'fa-laptop-code', color: '#3F51B5' },
+            { id: 'investment', name: 'Inwestycje', type: 'income', icon: 'fa-chart-line', color: '#009688' },
+            { id: 'other-income', name: 'Inne przychody', type: 'income', icon: 'fa-coins', color: '#795548' },
+            { id: 'food', name: 'Jedzenie', type: 'expense', icon: 'fa-utensils', color: '#FF6384' },
+            { id: 'transport', name: 'Transport', type: 'expense', icon: 'fa-car', color: '#36A2EB' },
+            { id: 'shopping', name: 'Zakupy', type: 'expense', icon: 'fa-shopping-bag', color: '#FFCE56' },
+            { id: 'entertainment', name: 'Rozrywka', type: 'expense', icon: 'fa-film', color: '#4BC0C0' },
+            { id: 'bills', name: 'Rachunki', type: 'expense', icon: 'fa-file-invoice-dollar', color: '#9966FF' },
+            { id: 'health', name: 'Zdrowie', type: 'expense', icon: 'fa-heartbeat', color: '#FF9F40' },
+            { id: 'other-expense', name: 'Inne wydatki', type: 'expense', icon: 'fa-receipt', color: '#8AC24A' }
+        ];
 
         // Elementy DOM
         const addTransactionBtn = document.getElementById('addTransactionBtn');
@@ -974,57 +1165,83 @@
         const calendarGrid = document.getElementById('calendarGrid');
         const exportBackupBtn = document.getElementById('exportBackupBtn');
         const importBackupBtn = document.getElementById('importBackupBtn');
-        const loginBtn = document.getElementById('loginBtn');
         const logoutBtn = document.getElementById('logoutBtn');
+        const userInfo = document.getElementById('userInfo');
+        const addCategoryBtn = document.getElementById('addCategoryBtn');
+        const categoriesList = document.getElementById('categoriesList');
+        const categoryModal = document.getElementById('categoryModal');
+        const closeCategoryModalBtn = document.getElementById('closeCategoryModalBtn');
+        const cancelCategoryBtn = document.getElementById('cancelCategoryBtn');
+        const categoryForm = document.getElementById('categoryForm');
+        const categoryModalTitle = document.getElementById('categoryModalTitle');
+        const submitCategoryBtn = document.getElementById('submitCategoryBtn');
+        const historyList = document.getElementById('historyList');
+        const historyMonth = document.getElementById('historyMonth');
+        const historyYear = document.getElementById('historyYear');
+        const historyCategory = document.getElementById('historyCategory');
+        const applyHistoryFilters = document.getElementById('applyHistoryFilters');
+        const historyPagination = document.getElementById('historyPagination');
 
         // Inicjalizacja aplikacji
         function initApp() {
             initCharts();
             setupEventListeners();
             checkAuthState();
+            populateYearFilter();
         }
 
-        // Sprawdź stan uwierzytelnienia
+        // Sprawdź stan autoryzacji
         function checkAuthState() {
-            // W uproszczonej wersji używamy prostego identyfikatora użytkownika
-            // W rzeczywistej aplikacji użyłbyś Firebase Authentication
-            const storedUserId = localStorage.getItem('smartBudgetUserId');
-            if (storedUserId) {
-                userId = storedUserId;
-                loginBtn.style.display = 'none';
-                logoutBtn.style.display = 'block';
-                loadTransactions();
-            } else {
-                userId = null;
-                loginBtn.style.display = 'block';
-                logoutBtn.style.display = 'none';
-                transactions = [];
-                renderTransactions();
-                updateSummary();
-            }
+            auth.onAuthStateChanged((user) => {
+                if (user) {
+                    userId = user.uid;
+                    logoutBtn.style.display = 'block';
+                    userInfo.style.display = 'block';
+                    loadTransactions();
+                    loadCategories();
+                } else {
+                    loginAnonymously();
+                }
+            });
         }
 
-        // Logowanie (uproszczone - w rzeczywistej aplikacji użyj Firebase Authentication)
-        function login() {
-            const newUserId = prompt('Wprowadź identyfikator użytkownika:');
-            if (newUserId) {
-                userId = newUserId;
-                localStorage.setItem('smartBudgetUserId', userId);
-                loginBtn.style.display = 'none';
-                logoutBtn.style.display = 'block';
-                loadTransactions();
-            }
+        // Logowanie anonimowe
+        function loginAnonymously() {
+            auth.signInAnonymously()
+                .then((userCredential) => {
+                    userId = userCredential.user.uid;
+                    logoutBtn.style.display = 'block';
+                    userInfo.style.display = 'block';
+                    loadTransactions();
+                    loadCategories();
+                })
+                .catch((error) => {
+                    console.error('Błąd logowania anonimowego:', error);
+                    userId = null;
+                    logoutBtn.style.display = 'none';
+                    userInfo.style.display = 'none';
+                    transactions = [];
+                    categories = [];
+                    renderTransactions();
+                    updateSummary();
+                    renderCategories();
+                });
         }
 
         // Wylogowanie
         function logout() {
-            userId = null;
-            localStorage.removeItem('smartBudgetUserId');
-            loginBtn.style.display = 'block';
-            logoutBtn.style.display = 'none';
-            transactions = [];
-            renderTransactions();
-            updateSummary();
+            auth.signOut().then(() => {
+                userId = null;
+                logoutBtn.style.display = 'none';
+                userInfo.style.display = 'none';
+                transactions = [];
+                categories = [];
+                renderTransactions();
+                updateSummary();
+                renderCategories();
+            }).catch((error) => {
+                console.error('Błąd wylogowania:', error);
+            });
         }
 
         // Ładowanie transakcji z Firebase
@@ -1035,7 +1252,6 @@
             transactionsRef.on('value', (snapshot) => {
                 const data = snapshot.val();
                 if (data) {
-                    // Konwertuj obiekt na tablicę
                     transactions = Object.keys(data).map(key => ({
                         id: key,
                         ...data[key]
@@ -1046,6 +1262,47 @@
                 renderTransactions();
                 updateSummary();
                 updateCalendar();
+                updateHistoryFilters();
+            });
+        }
+
+        // Ładowanie kategorii z Firebase
+        function loadCategories() {
+            if (!userId) return;
+            
+            const categoriesRef = database.ref(`users/${userId}/categories`);
+            categoriesRef.on('value', (snapshot) => {
+                const data = snapshot.val();
+                if (data) {
+                    categories = Object.keys(data).map(key => ({
+                        id: key,
+                        ...data[key]
+                    }));
+                } else {
+                    // Jeśli nie ma kategorii, załaduj domyślne
+                    categories = [...defaultCategories];
+                    saveDefaultCategories();
+                }
+                renderCategories();
+                updateCategoryOptions();
+                updateHistoryCategoryFilter();
+            });
+        }
+
+        // Zapis domyślnych kategorii
+        function saveDefaultCategories() {
+            if (!userId) return;
+            
+            const categoriesRef = database.ref(`users/${userId}/categories`);
+            categoriesRef.remove(); // Usuń stare kategorie
+            
+            defaultCategories.forEach(category => {
+                categoriesRef.push({
+                    name: category.name,
+                    type: category.type,
+                    icon: category.icon,
+                    color: category.color
+                });
             });
         }
 
@@ -1075,6 +1332,30 @@
             }
         }
 
+        // Zapisywanie kategorii do Firebase
+        function saveCategory(category) {
+            if (!userId) {
+                alert('Musisz być zalogowany, aby zapisać kategorię');
+                return;
+            }
+            
+            const categoriesRef = database.ref(`users/${userId}/categories`);
+            if (category.id) {
+                // Aktualizuj istniejącą kategorię
+                const { id, ...categoryData } = category;
+                categoriesRef.child(id).update(categoryData);
+            } else {
+                // Dodaj nową kategorię
+                const newCategoryRef = categoriesRef.push();
+                newCategoryRef.set({
+                    name: category.name,
+                    type: category.type,
+                    icon: category.icon,
+                    color: category.color || '#4361ee'
+                });
+            }
+        }
+
         // Usuwanie transakcji z Firebase
         function deleteTransaction(id) {
             if (!userId) return;
@@ -1083,10 +1364,27 @@
             transactionRef.remove();
         }
 
+        // Usuwanie kategorii z Firebase
+        function deleteCategory(id) {
+            if (!userId) return;
+            
+            // Sprawdź, czy kategoria jest używana w transakcjach
+            const isCategoryUsed = transactions.some(transaction => transaction.category === id);
+            
+            if (isCategoryUsed) {
+                alert('Nie można usunąć kategorii, ponieważ jest używana w transakcjach!');
+                return;
+            }
+            
+            if (confirm('Czy na pewno chcesz usunąć tę kategorię?')) {
+                const categoryRef = database.ref(`users/${userId}/categories/${id}`);
+                categoryRef.remove();
+            }
+        }
+
         // Konfiguracja event listenerów
         function setupEventListeners() {
             // Logowanie/wylogowanie
-            loginBtn.addEventListener('click', login);
             logoutBtn.addEventListener('click', logout);
 
             // Nawigacja
@@ -1108,17 +1406,19 @@
                         updateAnalyticsChart();
                     } else if (section === 'calendar') {
                         updateCalendar();
+                    } else if (section === 'history') {
+                        renderHistory();
                     }
                 });
             });
 
             // Transakcje
-            addTransactionBtn.addEventListener('click', () => openModal());
-            addFirstTransactionBtn?.addEventListener('click', () => openModal());
-            closeModalBtn.addEventListener('click', closeModal);
-            cancelBtn.addEventListener('click', closeModal);
+            addTransactionBtn.addEventListener('click', () => openTransactionModal());
+            addFirstTransactionBtn?.addEventListener('click', () => openTransactionModal());
+            closeModalBtn.addEventListener('click', closeTransactionModal);
+            cancelBtn.addEventListener('click', closeTransactionModal);
             transactionModal.addEventListener('click', (e) => {
-                if (e.target === transactionModal) closeModal();
+                if (e.target === transactionModal) closeTransactionModal();
             });
 
             // Typ transakcji
@@ -1161,78 +1461,41 @@
 
             // Import danych
             importBackupBtn.addEventListener('click', importData);
-        }
 
-        // Eksport danych
-        function exportData() {
-            if (!userId) {
-                alert('Musisz być zalogowany, aby eksportować dane');
-                return;
-            }
-            
-            const dataStr = JSON.stringify(transactions, null, 2);
-            const blob = new Blob([dataStr], { type: 'application/json' });
-            
-            // Tworzymy tymczasowy link do pobrania
-            const a = document.createElement('a');
-            a.href = URL.createObjectURL(blob);
-            a.download = 'smart_budget_backup.json';
-            
-            // Symulujemy kliknięcie aby zapisać plik
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-            
-            // Zwolnienie zasobów
-            setTimeout(() => URL.revokeObjectURL(a.href), 100);
-        }
+            // Kategorie
+            addCategoryBtn.addEventListener('click', () => openCategoryModal());
+            closeCategoryModalBtn.addEventListener('click', closeCategoryModal);
+            cancelCategoryBtn.addEventListener('click', closeCategoryModal);
+            categoryModal.addEventListener('click', (e) => {
+                if (e.target === categoryModal) closeCategoryModal();
+            });
+            categoryForm.addEventListener('submit', handleCategorySubmit);
 
-        // Import danych
-        function importData() {
-            if (!userId) {
-                alert('Musisz być zalogowany, aby importować dane');
-                return;
-            }
-            
-            const input = document.createElement('input');
-            input.type = 'file';
-            input.accept = '.json';
-            
-            input.onchange = e => {
-                const file = e.target.files[0];
-                if (!file) return;
-                
-                const reader = new FileReader();
-                reader.onload = event => {
-                    try {
-                        const data = JSON.parse(event.target.result);
-                        if (Array.isArray(data)) {
-                            // Usuń wszystkie istniejące transakcje
-                            const transactionsRef = database.ref(`users/${userId}/transactions`);
-                            transactionsRef.remove();
-                            
-                            // Dodaj zaimportowane transakcje
-                            data.forEach(transaction => {
-                                const { id, ...transactionData } = transaction;
-                                transactionsRef.push(transactionData);
-                            });
-                            
-                            alert('Dane zostały zaimportowane pomyślnie!');
-                        } else {
-                            alert('Nieprawidłowy format pliku. Oczekiwano tablicy transakcji.');
-                        }
-                    } catch (error) {
-                        alert('Błąd podczas wczytywania pliku: ' + error.message);
-                    }
-                };
-                reader.readAsText(file);
-            };
-            
-            input.click();
+            // Historia
+            applyHistoryFilters.addEventListener('click', () => {
+                currentHistoryPage = 1;
+                renderHistory();
+            });
+
+            // Zmiana miesiąca/roku w historii
+            historyMonth.addEventListener('change', () => {
+                currentHistoryPage = 1;
+                renderHistory();
+            });
+
+            historyYear.addEventListener('change', () => {
+                currentHistoryPage = 1;
+                renderHistory();
+            });
+
+            historyCategory.addEventListener('change', () => {
+                currentHistoryPage = 1;
+                renderHistory();
+            });
         }
 
         // Otwórz modal transakcji
-        function openModal(transaction = null) {
+        function openTransactionModal(transaction = null) {
             if (!userId) {
                 alert('Musisz być zalogowany, aby dodawać transakcje');
                 return;
@@ -1270,35 +1533,114 @@
             document.body.style.overflow = 'hidden';
         }
 
-        // Zamknij modal
-        function closeModal() {
+        // Zamknij modal transakcji
+        function closeTransactionModal() {
             transactionModal.classList.remove('active');
             document.body.style.overflow = 'auto';
             editingTransactionId = null;
         }
 
-        // Aktualizuj opcje kategorii
+        // Otwórz modal kategorii
+        function openCategoryModal(category = null) {
+            if (!userId) {
+                alert('Musisz być zalogowany, aby dodawać kategorie');
+                return;
+            }
+            
+            if (category) {
+                // Tryb edycji
+                categoryModalTitle.textContent = 'Edytuj kategorię';
+                submitCategoryBtn.textContent = 'Zapisz zmiany';
+                document.getElementById('categoryId').value = category.id;
+                document.getElementById('categoryName').value = category.name;
+                document.getElementById('categoryIcon').value = category.icon;
+                document.getElementById('categoryColor').value = category.color || '#4361ee';
+                
+                if (category.type === 'income') {
+                    document.getElementById('categoryIncomeType').checked = true;
+                } else {
+                    document.getElementById('categoryExpenseType').checked = true;
+                }
+            } else {
+                // Tryb dodawania
+                categoryModalTitle.textContent = 'Dodaj nową kategorię';
+                submitCategoryBtn.textContent = 'Dodaj kategorię';
+                categoryForm.reset();
+                document.getElementById('categoryIncomeType').checked = true;
+                document.getElementById('categoryColor').value = '#4361ee';
+            }
+            
+            categoryModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
+        }
+
+        // Zamknij modal kategorii
+        function closeCategoryModal() {
+            categoryModal.classList.remove('active');
+            document.body.style.overflow = 'auto';
+            editingCategoryId = null;
+        }
+
+        // Aktualizuj opcje kategorii w formularzu
         function updateCategoryOptions() {
             const type = document.querySelector('input[name="type"]:checked').value;
-            const options = document.getElementById('category').options;
+            const categorySelect = document.getElementById('category');
             
-            for (let i = 0; i < options.length; i++) {
-                const option = options[i];
-                const optgroup = option.parentElement;
-                
-                if (optgroup.label === 'Przychody' && type === 'expense') {
-                    option.disabled = true;
-                } else if (optgroup.label === 'Wydatki' && type === 'income') {
-                    option.disabled = true;
-                } else {
-                    option.disabled = false;
-                }
+            // Wyczyść istniejące opcje (zachowaj pierwszą opcję)
+            while (categorySelect.options.length > 1) {
+                categorySelect.remove(1);
             }
             
-            // Reset selected value if it's disabled
-            if (options[options.selectedIndex].disabled) {
-                document.getElementById('category').value = '';
+            // Dodaj kategorie odpowiedniego typu
+            const filteredCategories = categories.filter(cat => cat.type === type);
+            filteredCategories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.id;
+                option.textContent = category.name;
+                categorySelect.appendChild(option);
+            });
+        }
+
+        // Aktualizuj filtr kategorii w historii
+        function updateHistoryCategoryFilter() {
+            // Wyczyść istniejące opcje (zachowaj pierwszą opcję)
+            while (historyCategory.options.length > 1) {
+                historyCategory.remove(1);
             }
+            
+            // Dodaj wszystkie kategorie
+            categories.forEach(category => {
+                const option = document.createElement('option');
+                option.value = category.id;
+                option.textContent = category.name;
+                historyCategory.appendChild(option);
+            });
+        }
+
+        // Wypełnij filtr lat w historii
+        function populateYearFilter() {
+            const currentYear = new Date().getFullYear();
+            for (let year = currentYear; year >= currentYear - 5; year--) {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                historyYear.appendChild(option);
+            }
+        }
+
+        // Aktualizuj filtry historii na podstawie dostępnych transakcji
+        function updateHistoryFilters() {
+            // Znajdź unikalne lata z transakcji
+            const years = [...new Set(transactions.map(t => new Date(t.date).getFullYear()))];
+            
+            // Wyczyść i wypełnij filtr lat
+            historyYear.innerHTML = '<option value="">Wszystkie lata</option>';
+            years.sort((a, b) => b - a).forEach(year => {
+                const option = document.createElement('option');
+                option.value = year;
+                option.textContent = year;
+                historyYear.appendChild(option);
+            });
         }
 
         // Obsługa formularza transakcji
@@ -1324,7 +1666,29 @@
             };
             
             saveTransaction(transaction);
-            closeModal();
+            closeTransactionModal();
+        }
+
+        // Obsługa formularza kategorii
+        function handleCategorySubmit(e) {
+            e.preventDefault();
+            
+            const type = document.querySelector('input[name="categoryType"]:checked').value;
+            const name = document.getElementById('categoryName').value;
+            const icon = document.getElementById('categoryIcon').value;
+            const color = document.getElementById('categoryColor').value;
+            const id = document.getElementById('categoryId').value;
+            
+            const category = {
+                id,
+                type,
+                name,
+                icon,
+                color
+            };
+            
+            saveCategory(category);
+            closeCategoryModal();
         }
 
         // Renderuj listę transakcji
@@ -1335,12 +1699,8 @@
                         <i class="fas fa-user"></i>
                         <h3>Nie jesteś zalogowany</h3>
                         <p>Zaloguj się, aby wyświetlić swoje transakcje</p>
-                        <button class="btn btn-primary" id="loginFromListBtn">
-                            <i class="fas fa-sign-in-alt"></i> Zaloguj
-                        </button>
                     </div>
                 `;
-                document.getElementById('loginFromListBtn')?.addEventListener('click', login);
                 return;
             }
             
@@ -1355,22 +1715,50 @@
                         </button>
                     </div>
                 `;
-                document.getElementById('addFirstTransactionBtn')?.addEventListener('click', () => openModal());
+                document.getElementById('addFirstTransactionBtn')?.addEventListener('click', () => openTransactionModal());
                 return;
             }
             
-            let filteredTransactions = transactions;
+            // Pobierz tylko transakcje z bieżącego miesiąca
+            const currentDate = new Date();
+            const currentMonth = currentDate.getMonth();
+            const currentYear = currentDate.getFullYear();
+            
+            let filteredTransactions = transactions.filter(t => {
+                const transactionDate = new Date(t.date);
+                return transactionDate.getMonth() === currentMonth && 
+                       transactionDate.getFullYear() === currentYear;
+            });
+            
             if (filter !== 'all') {
-                filteredTransactions = transactions.filter(t => t.type === filter);
+                filteredTransactions = filteredTransactions.filter(t => t.type === filter);
             }
             
             // Sortuj od najnowszych do najstarszych
             filteredTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
             
-            transactionsList.innerHTML = filteredTransactions.map(transaction => `
+            // Ogranicz do 10 najnowszych transakcji
+            const recentTransactions = filteredTransactions.slice(0, 10);
+            
+            if (recentTransactions.length === 0) {
+                transactionsList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-money-bill-wave"></i>
+                        <h3>Brak transakcji w bieżącym miesiącu</h3>
+                        <p>Dodaj transakcję, klikając przycisk poniżej</p>
+                        <button class="btn btn-primary" id="addFirstTransactionBtn">
+                            <i class="fas fa-plus"></i> Dodaj transakcję
+                        </button>
+                    </div>
+                `;
+                document.getElementById('addFirstTransactionBtn')?.addEventListener('click', () => openTransactionModal());
+                return;
+            }
+            
+            transactionsList.innerHTML = recentTransactions.map(transaction => `
                 <div class="transaction fade-in" data-id="${transaction.id}">
                     <div class="transaction-info">
-                        <div class="transaction-icon ${transaction.type}-icon">
+                        <div class="transaction-icon ${transaction.type}-icon" style="background-color: ${getCategoryColor(transaction.category) || (transaction.type === 'income' ? 'rgba(75, 181, 67, 0.1)' : 'rgba(255, 51, 51, 0.1)')}; color: ${getCategoryColor(transaction.category) || (transaction.type === 'income' ? '#4bb543' : '#ff3333')}">
                             <i class="fas ${getCategoryIcon(transaction.category)}"></i>
                         </div>
                         <div class="transaction-details">
@@ -1398,7 +1786,7 @@
                     const id = e.currentTarget.getAttribute('data-id');
                     const transaction = transactions.find(t => t.id === id);
                     if (transaction) {
-                        openModal(transaction);
+                        openTransactionModal(transaction);
                     }
                 });
             });
@@ -1411,6 +1799,352 @@
                     }
                 });
             });
+        }
+
+        // Renderuj listę kategorii
+        function renderCategories() {
+            if (!userId) {
+                categoriesList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-user"></i>
+                        <h3>Nie jesteś zalogowany</h3>
+                        <p>Zaloguj się, aby wyświetlić kategorie</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            if (categories.length === 0) {
+                categoriesList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-tags"></i>
+                        <h3>Brak kategorii</h3>
+                        <p>Dodaj swoje pierwsze kategorie, klikając przycisk powyżej</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            // Podziel kategorie na przychody i wydatki
+            const incomeCategories = categories.filter(c => c.type === 'income');
+            const expenseCategories = categories.filter(c => c.type === 'expense');
+            
+            let categoriesHTML = '';
+            
+            if (incomeCategories.length > 0) {
+                categoriesHTML += `
+                    <h4>Przychody</h4>
+                    ${incomeCategories.map(category => `
+                        <div class="category-item">
+                            <div class="category-info">
+                                <div class="category-icon" style="background-color: ${category.color || '#4361ee'}; color: white;">
+                                    <i class="fas ${category.icon}"></i>
+                                </div>
+                                <span>${category.name}</span>
+                            </div>
+                            <div class="category-actions">
+                                <button class="btn btn-outline btn-sm edit-category-btn" data-id="${category.id}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-danger btn-sm delete-category-btn" data-id="${category.id}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `).join('')}
+                `;
+            }
+            
+            if (expenseCategories.length > 0) {
+                categoriesHTML += `
+                    <h4>Wydatki</h4>
+                    ${expenseCategories.map(category => `
+                        <div class="category-item">
+                            <div class="category-info">
+                                <div class="category-icon" style="background-color: ${category.color || '#4361ee'}; color: white;">
+                                    <i class="fas ${category.icon}"></i>
+                                </div>
+                                <span>${category.name}</span>
+                            </div>
+                            <div class="category-actions">
+                                <button class="btn btn-outline btn-sm edit-category-btn" data-id="${category.id}">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <button class="btn btn-danger btn-sm delete-category-btn" data-id="${category.id}">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </div>
+                        </div>
+                    `).join('')}
+                `;
+            }
+            
+            categoriesList.innerHTML = categoriesHTML;
+            
+            // Dodaj event listeners do przycisków edycji i usuwania
+            document.querySelectorAll('.edit-category-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.currentTarget.getAttribute('data-id');
+                    const category = categories.find(c => c.id === id);
+                    if (category) {
+                        openCategoryModal(category);
+                    }
+                });
+            });
+            
+            document.querySelectorAll('.delete-category-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.currentTarget.getAttribute('data-id');
+                    deleteCategory(id);
+                });
+            });
+        }
+
+        // Renderuj historię transakcji
+        function renderHistory() {
+            if (!userId) {
+                historyList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-user"></i>
+                        <h3>Nie jesteś zalogowany</h3>
+                        <p>Zaloguj się, aby wyświetlić historię transakcji</p>
+                    </div>
+                `;
+                return;
+            }
+            
+            if (transactions.length === 0) {
+                historyList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-history"></i>
+                        <h3>Brak transakcji</h3>
+                        <p>Dodaj swoją pierwszą transakcję, aby zobaczyć historię</p>
+                    </div>
+                `;
+                historyPagination.innerHTML = '';
+                return;
+            }
+            
+            // Filtruj transakcje
+            let filteredTransactions = [...transactions];
+            
+            // Filtruj po miesiącu
+            const selectedMonth = historyMonth.value;
+            if (selectedMonth) {
+                filteredTransactions = filteredTransactions.filter(t => 
+                    new Date(t.date).getMonth() === parseInt(selectedMonth)
+                );
+            }
+            
+            // Filtruj po roku
+            const selectedYear = historyYear.value;
+            if (selectedYear) {
+                filteredTransactions = filteredTransactions.filter(t => 
+                    new Date(t.date).getFullYear() === parseInt(selectedYear)
+                );
+            }
+            
+            // Filtruj po kategorii
+            const selectedCategory = historyCategory.value;
+            if (selectedCategory) {
+                filteredTransactions = filteredTransactions.filter(t => 
+                    t.category === selectedCategory
+                );
+            }
+            
+            // Sortuj od najnowszych do najstarszych
+            filteredTransactions.sort((a, b) => new Date(b.date) - new Date(a.date));
+            
+            // Paginacja
+            const totalPages = Math.ceil(filteredTransactions.length / transactionsPerPage);
+            
+            if (filteredTransactions.length === 0) {
+                historyList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-history"></i>
+                        <h3>Brak transakcji</h3>
+                        <p>Nie znaleziono transakcji spełniających kryteria wyszukiwania</p>
+                    </div>
+                `;
+                historyPagination.innerHTML = '';
+                return;
+            }
+            
+            // Wyświetl transakcje dla bieżącej strony
+            const startIndex = (currentHistoryPage - 1) * transactionsPerPage;
+            const endIndex = startIndex + transactionsPerPage;
+            const paginatedTransactions = filteredTransactions.slice(startIndex, endIndex);
+            
+            historyList.innerHTML = paginatedTransactions.map(transaction => `
+                <div class="transaction fade-in" data-id="${transaction.id}">
+                    <div class="transaction-info">
+                        <div class="transaction-icon ${transaction.type}-icon" style="background-color: ${getCategoryColor(transaction.category) || (transaction.type === 'income' ? 'rgba(75, 181, 67, 0.1)' : 'rgba(255, 51, 51, 0.1)')}; color: ${getCategoryColor(transaction.category) || (transaction.type === 'income' ? '#4bb543' : '#ff3333')}">
+                            <i class="fas ${getCategoryIcon(transaction.category)}"></i>
+                        </div>
+                        <div class="transaction-details">
+                            <div class="transaction-title">${transaction.title}</div>
+                            <div class="transaction-category">${getCategoryName(transaction.category)} • ${formatDate(transaction.date)}</div>
+                            ${transaction.notes ? `<div class="transaction-notes">${transaction.notes}</div>` : ''}
+                        </div>
+                    </div>
+                    <div class="transaction-amount ${transaction.type}">
+                        ${transaction.type === 'income' ? '+' : '-'}${transaction.amount.toFixed(2)} zł
+                    </div>
+                    <div class="transaction-actions">
+                        <button class="btn btn-outline btn-sm edit-btn" data-id="${transaction.id}">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                        <button class="btn btn-danger btn-sm delete-btn" data-id="${transaction.id}">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Dodaj paginację
+            let paginationHTML = '';
+            
+            if (totalPages > 1) {
+                paginationHTML = `
+                    <button class="pagination-btn" id="prevPageBtn" ${currentHistoryPage === 1 ? 'disabled' : ''}>
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                `;
+                
+                for (let i = 1; i <= totalPages; i++) {
+                    paginationHTML += `
+                        <button class="pagination-btn ${i === currentHistoryPage ? 'active' : ''}" data-page="${i}">
+                            ${i}
+                        </button>
+                    `;
+                }
+                
+                paginationHTML += `
+                    <button class="pagination-btn" id="nextPageBtn" ${currentHistoryPage === totalPages ? 'disabled' : ''}>
+                        <i class="fas fa-chevron-right"></i>
+                    </button>
+                `;
+            }
+            
+            historyPagination.innerHTML = paginationHTML;
+            
+            // Dodaj event listeners do paginacji
+            document.querySelectorAll('.pagination-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    if (btn.id === 'prevPageBtn') {
+                        currentHistoryPage--;
+                    } else if (btn.id === 'nextPageBtn') {
+                        currentHistoryPage++;
+                    } else if (btn.dataset.page) {
+                        currentHistoryPage = parseInt(btn.dataset.page);
+                    }
+                    renderHistory();
+                });
+            });
+            
+            // Dodaj event listeners do przycisków edycji i usuwania
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.currentTarget.getAttribute('data-id');
+                    const transaction = transactions.find(t => t.id === id);
+                    if (transaction) {
+                        openTransactionModal(transaction);
+                    }
+                });
+            });
+            
+            document.querySelectorAll('.delete-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const id = e.currentTarget.getAttribute('data-id');
+                    if (confirm('Czy na pewno chcesz usunąć tę transakcję?')) {
+                        deleteTransaction(id);
+                    }
+                });
+            });
+        }
+
+        // Eksport danych
+        function exportData() {
+            if (!userId) {
+                alert('Musisz być zalogowany, aby eksportować dane');
+                return;
+            }
+            
+            const data = {
+                transactions: transactions,
+                categories: categories,
+                exportDate: new Date().toISOString()
+            };
+            
+            const dataStr = JSON.stringify(data, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            
+            // Tworzymy tymczasowy link do pobrania
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'smart_budget_backup.json';
+            
+            // Symulujemy kliknięcie aby zapisać plik
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            // Zwolnienie zasobów
+            setTimeout(() => URL.revokeObjectURL(a.href), 100);
+        }
+
+        // Import danych
+        function importData() {
+            if (!userId) {
+                alert('Musisz być zalogowany, aby importować dane');
+                return;
+            }
+            
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = e => {
+                const file = e.target.files[0];
+                if (!file) return;
+                
+                const reader = new FileReader();
+                reader.onload = event => {
+                    try {
+                        const data = JSON.parse(event.target.result);
+                        
+                        if (data.transactions && data.categories) {
+                            // Usuń wszystkie istniejące dane
+                            const transactionsRef = database.ref(`users/${userId}/transactions`);
+                            const categoriesRef = database.ref(`users/${userId}/categories`);
+                            
+                            transactionsRef.remove();
+                            categoriesRef.remove();
+                            
+                            // Dodaj zaimportowane transakcje
+                            data.transactions.forEach(transaction => {
+                                const { id, ...transactionData } = transaction;
+                                transactionsRef.push(transactionData);
+                            });
+                            
+                            // Dodaj zaimportowane kategorie
+                            data.categories.forEach(category => {
+                                const { id, ...categoryData } = category;
+                                categoriesRef.push(categoryData);
+                            });
+                            
+                            alert('Dane zostały zaimportowane pomyślnie!');
+                        } else {
+                            alert('Nieprawidłowy format pliku. Oczekiwano obiektu z transakcjami i kategoriami.');
+                        }
+                    } catch (error) {
+                        alert('Błąd podczas wczytywania pliku: ' + error.message);
+                    }
+                };
+                reader.readAsText(file);
+            };
+            
+            input.click();
         }
 
         // Aktualizuj podsumowanie
@@ -1649,15 +2383,18 @@
             const amounts = Object.values(expenseCategories);
             
             // Kolory dla kategorii
-            const backgroundColors = [
-                '#FF6384', '#36A2EB', '#FFCE56', '#4BC0C0', '#9966FF',
-                '#FF9F40', '#8AC24A', '#607D8B', '#E91E63', '#9C27B0'
-            ];
+            const backgroundColors = categories.map(catId => {
+                const category = categories.find(c => c.id === catId);
+                return category ? category.color : '#4361ee';
+            });
             
             // Aktualizacja wykresu
-            analyticsChart.data.labels = categories.map(c => getCategoryName(c));
+            analyticsChart.data.labels = categories.map(catId => {
+                const category = categories.find(c => c.id === catId);
+                return category ? category.name : catId;
+            });
             analyticsChart.data.datasets[0].data = amounts;
-            analyticsChart.data.datasets[0].backgroundColor = backgroundColors.slice(0, categories.length);
+            analyticsChart.data.datasets[0].backgroundColor = backgroundColors;
             analyticsChart.update();
         }
 
@@ -1742,40 +2479,19 @@
         }
 
         // Pomocnicze funkcje
-        function getCategoryIcon(category) {
-            const icons = {
-                'salary': 'fa-money-bill',
-                'bonus': 'fa-gift',
-                'freelance': 'fa-laptop-code',
-                'investment': 'fa-chart-line',
-                'other-income': 'fa-coins',
-                'food': 'fa-utensils',
-                'transport': 'fa-car',
-                'shopping': 'fa-shopping-bag',
-                'entertainment': 'fa-film',
-                'bills': 'fa-file-invoice-dollar',
-                'health': 'fa-heartbeat',
-                'other-expense': 'fa-receipt'
-            };
-            return icons[category] || 'fa-money-bill-wave';
+        function getCategoryIcon(categoryId) {
+            const category = categories.find(c => c.id === categoryId);
+            return category ? category.icon : 'fa-money-bill-wave';
         }
 
-        function getCategoryName(category) {
-            const names = {
-                'salary': 'Wynagrodzenie',
-                'bonus': 'Premia',
-                'freelance': 'Freelance',
-                'investment': 'Inwestycje',
-                'other-income': 'Inne przychody',
-                'food': 'Jedzenie',
-                'transport': 'Transport',
-                'shopping': 'Zakupy',
-                'entertainment': 'Rozrywka',
-                'bills': 'Rachunki',
-                'health': 'Zdrowie',
-                'other-expense': 'Inne wydatki'
-            };
-            return names[category] || 'Inne';
+        function getCategoryName(categoryId) {
+            const category = categories.find(c => c.id === categoryId);
+            return category ? category.name : 'Inne';
+        }
+
+        function getCategoryColor(categoryId) {
+            const category = categories.find(c => c.id === categoryId);
+            return category ? category.color : null;
         }
 
         function formatDate(dateString) {
@@ -1836,4 +2552,3 @@
     </script>
 </body>
 </html>
-
