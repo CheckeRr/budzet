@@ -571,7 +571,7 @@
             border-radius: 3px;
             overflow: hidden;
             text-overflow: ellipsis;
-            white-space: nowrap;
+            white-space: nowarp;
         }
 
         .calendar-transaction.income {
@@ -626,9 +626,9 @@
     </style>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <!-- Firebase SDK -->
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-app-compat.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.0/firebase-database-compat.js"></script>
+    <!-- Dodaj Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 </head>
 <body>
     <div class="container">
@@ -638,11 +638,11 @@
                 <span>Smart Budget</span>
             </div>
             <div class="user-actions">
-                <button class="btn btn-primary" id="exportBackupBtn">
-                    <i class="fas fa-file-export"></i> Eksportuj dane
+                <button class="btn btn-primary" id="loginBtn">
+                    <i class="fas fa-sign-in-alt"></i> Zaloguj
                 </button>
-                <button class="btn btn-outline" id="importBackupBtn">
-                    <i class="fas fa-file-import"></i> Importuj dane
+                <button class="btn btn-outline" id="logoutBtn" style="display: none;">
+                    <i class="fas fa-sign-out-alt"></i> Wyloguj
                 </button>
             </div>
         </header>
@@ -932,19 +932,19 @@
     <script>
         // Konfiguracja Firebase
         const firebaseConfig = {
-            apiKey: "AIzaSyC7E-c2Rv20oTrDGji-no3GefWKOsX7lpE",
-            authDomain: "budzet-a9f1e.firebaseapp.com",
-            databaseURL: "https://budzet-a9f1e-default-rtdb.europe-west1.firebasedatabase.app/",
-            projectId: "budzet-a9f1e",
-            storageBucket: "budzet-a9f1e.firebasestorage.app",
-            messagingSenderId: "445564382718",
-            appId: "1:445564382718:web:cf3dd563daf6b9e0c124af"
+            // Tutaj wstaw swoją konfigurację Firebase
+            apiKey: "YOUR_API_KEY",
+            authDomain: "your-project-id.firebaseapp.com",
+            databaseURL: "https://your-project-id-default-rtdb.firebaseio.com",
+            projectId: "your-project-id",
+            storageBucket: "your-project-id.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
         };
 
         // Inicjalizacja Firebase
         firebase.initializeApp(firebaseConfig);
         const database = firebase.database();
-        const transactionsRef = database.ref('transactions');
 
         // Główne dane aplikacji
         let transactions = [];
@@ -952,6 +952,7 @@
         let currentYear = new Date().getFullYear();
         let editingTransactionId = null;
         let incomeChart, expenseChart, balanceChart, analyticsChart;
+        let userId = null;
 
         // Elementy DOM
         const addTransactionBtn = document.getElementById('addTransactionBtn');
@@ -973,61 +974,121 @@
         const calendarGrid = document.getElementById('calendarGrid');
         const exportBackupBtn = document.getElementById('exportBackupBtn');
         const importBackupBtn = document.getElementById('importBackupBtn');
+        const loginBtn = document.getElementById('loginBtn');
+        const logoutBtn = document.getElementById('logoutBtn');
 
         // Inicjalizacja aplikacji
         function initApp() {
-            // Nasłuchuj zmian w bazie danych Firebase
+            initCharts();
+            setupEventListeners();
+            checkAuthState();
+        }
+
+        // Sprawdź stan uwierzytelnienia
+        function checkAuthState() {
+            // W uproszczonej wersji używamy prostego identyfikatora użytkownika
+            // W rzeczywistej aplikacji użyłbyś Firebase Authentication
+            const storedUserId = localStorage.getItem('smartBudgetUserId');
+            if (storedUserId) {
+                userId = storedUserId;
+                loginBtn.style.display = 'none';
+                logoutBtn.style.display = 'block';
+                loadTransactions();
+            } else {
+                userId = null;
+                loginBtn.style.display = 'block';
+                logoutBtn.style.display = 'none';
+                transactions = [];
+                renderTransactions();
+                updateSummary();
+            }
+        }
+
+        // Logowanie (uproszczone - w rzeczywistej aplikacji użyj Firebase Authentication)
+        function login() {
+            const newUserId = prompt('Wprowadź identyfikator użytkownika:');
+            if (newUserId) {
+                userId = newUserId;
+                localStorage.setItem('smartBudgetUserId', userId);
+                loginBtn.style.display = 'none';
+                logoutBtn.style.display = 'block';
+                loadTransactions();
+            }
+        }
+
+        // Wylogowanie
+        function logout() {
+            userId = null;
+            localStorage.removeItem('smartBudgetUserId');
+            loginBtn.style.display = 'block';
+            logoutBtn.style.display = 'none';
+            transactions = [];
+            renderTransactions();
+            updateSummary();
+        }
+
+        // Ładowanie transakcji z Firebase
+        function loadTransactions() {
+            if (!userId) return;
+            
+            const transactionsRef = database.ref(`users/${userId}/transactions`);
             transactionsRef.on('value', (snapshot) => {
                 const data = snapshot.val();
-                transactions = data ? Object.values(data) : [];
+                if (data) {
+                    // Konwertuj obiekt na tablicę
+                    transactions = Object.keys(data).map(key => ({
+                        id: key,
+                        ...data[key]
+                    }));
+                } else {
+                    transactions = [];
+                }
                 renderTransactions();
                 updateSummary();
                 updateCalendar();
             });
-
-            initCharts();
-            setupEventListeners();
         }
-function handleTransactionSubmit(e) {
-    e.preventDefault();
-    
-    // 1. Pobierz dane z formularza
-    const type = document.querySelector('input[name="type"]:checked').value;
-    const title = document.getElementById('title').value;
-    const amount = parseFloat(document.getElementById('amount').value);
-    const category = document.getElementById('category').value;
-    const date = document.getElementById('date').value;
-    const notes = document.getElementById('notes').value;
-    const id = document.getElementById('transactionId').value || firebase.database().ref().child('transactions').push().key;
-    
-    // 2. Stwórz obiekt transakcji
-    const transaction = {
-        id,
-        type,
-        title,
-        amount,
-        category,
-        date,
-        notes: notes || "", // Zabezpieczenie przed null/undefined
-        createdAt: firebase.database.ServerValue.TIMESTAMP
-    };
-    
-    // 3. Zapisz do Firebase
-    const updates = {};
-    updates['/transactions/' + id] = transaction;
-    
-    firebase.database().ref().update(updates)
-        .then(() => {
-            console.log("Zapisano transakcję:", transaction);
-            closeModal();
-        })
-        .catch((error) => {
-            console.error("Błąd zapisu:", error);
-            alert("Wystąpił błąd podczas zapisywania: " + error.message);
-        });
-}
+
+        // Zapisywanie transakcji do Firebase
+        function saveTransaction(transaction) {
+            if (!userId) {
+                alert('Musisz być zalogowany, aby zapisać transakcję');
+                return;
+            }
+            
+            const transactionsRef = database.ref(`users/${userId}/transactions`);
+            if (transaction.id) {
+                // Aktualizuj istniejącą transakcję
+                const { id, ...transactionData } = transaction;
+                transactionsRef.child(id).update(transactionData);
+            } else {
+                // Dodaj nową transakcję
+                const newTransactionRef = transactionsRef.push();
+                newTransactionRef.set({
+                    type: transaction.type,
+                    title: transaction.title,
+                    amount: transaction.amount,
+                    category: transaction.category,
+                    date: transaction.date,
+                    notes: transaction.notes || ''
+                });
+            }
+        }
+
+        // Usuwanie transakcji z Firebase
+        function deleteTransaction(id) {
+            if (!userId) return;
+            
+            const transactionRef = database.ref(`users/${userId}/transactions/${id}`);
+            transactionRef.remove();
+        }
+
         // Konfiguracja event listenerów
         function setupEventListeners() {
+            // Logowanie/wylogowanie
+            loginBtn.addEventListener('click', login);
+            logoutBtn.addEventListener('click', logout);
+
             // Nawigacja
             navLinks.forEach(link => {
                 link.addEventListener('click', (e) => {
@@ -1096,100 +1157,118 @@ function handleTransactionSubmit(e) {
             });
 
             // Eksport danych
-            exportBackupBtn.addEventListener('click', () => {
-                const dataStr = JSON.stringify(transactions, null, 2);
-                const blob = new Blob([dataStr], { type: 'application/json' });
-                const url = URL.createObjectURL(blob);
-                
-                const a = document.createElement('a');
-                a.href = url;
-                a.download = 'budget_backup.json';
-                a.click();
-                URL.revokeObjectURL(url);
-            });
+            exportBackupBtn.addEventListener('click', exportData);
 
             // Import danych
-            importBackupBtn.addEventListener('click', () => {
-                const input = document.createElement('input');
-                input.type = 'file';
-                input.accept = '.json';
+            importBackupBtn.addEventListener('click', importData);
+        }
+
+        // Eksport danych
+        function exportData() {
+            if (!userId) {
+                alert('Musisz być zalogowany, aby eksportować dane');
+                return;
+            }
+            
+            const dataStr = JSON.stringify(transactions, null, 2);
+            const blob = new Blob([dataStr], { type: 'application/json' });
+            
+            // Tworzymy tymczasowy link do pobrania
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(blob);
+            a.download = 'smart_budget_backup.json';
+            
+            // Symulujemy kliknięcie aby zapisać plik
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            
+            // Zwolnienie zasobów
+            setTimeout(() => URL.revokeObjectURL(a.href), 100);
+        }
+
+        // Import danych
+        function importData() {
+            if (!userId) {
+                alert('Musisz być zalogowany, aby importować dane');
+                return;
+            }
+            
+            const input = document.createElement('input');
+            input.type = 'file';
+            input.accept = '.json';
+            
+            input.onchange = e => {
+                const file = e.target.files[0];
+                if (!file) return;
                 
-                input.onchange = e => {
-                    const file = e.target.files[0];
-                    if (!file) return;
-                    
-                    const reader = new FileReader();
-                    reader.onload = event => {
-                        try {
-                            const data = JSON.parse(event.target.result);
-                            if (Array.isArray(data)) {
-                                // Zapisz wszystkie transakcje do Firebase
-                                const updates = {};
-                                data.forEach(transaction => {
-                                    updates[transaction.id] = transaction;
-                                });
-                                transactionsRef.update(updates)
-                                    .then(() => alert('Dane zostały zaimportowane pomyślnie!'))
-                                    .catch(error => alert('Błąd podczas importowania danych: ' + error.message));
-                            } else {
-                                alert('Nieprawidłowy format pliku. Oczekiwano tablicy transakcji.');
-                            }
-                        } catch (error) {
-                            alert('Błąd podczas wczytywania pliku: ' + error.message);
+                const reader = new FileReader();
+                reader.onload = event => {
+                    try {
+                        const data = JSON.parse(event.target.result);
+                        if (Array.isArray(data)) {
+                            // Usuń wszystkie istniejące transakcje
+                            const transactionsRef = database.ref(`users/${userId}/transactions`);
+                            transactionsRef.remove();
+                            
+                            // Dodaj zaimportowane transakcje
+                            data.forEach(transaction => {
+                                const { id, ...transactionData } = transaction;
+                                transactionsRef.push(transactionData);
+                            });
+                            
+                            alert('Dane zostały zaimportowane pomyślnie!');
+                        } else {
+                            alert('Nieprawidłowy format pliku. Oczekiwano tablicy transakcji.');
                         }
-                    };
-                    reader.readAsText(file);
+                    } catch (error) {
+                        alert('Błąd podczas wczytywania pliku: ' + error.message);
+                    }
                 };
-                
-                input.click();
-            });
+                reader.readAsText(file);
+            };
+            
+            input.click();
         }
 
         // Otwórz modal transakcji
-function openModal(transaction = null) {
-    try {
-        // Debugowanie - sprawdź czy modal istnieje
-        const modal = document.getElementById('transactionModal');
-        if (!modal) {
-            throw new Error("Modal transactionModal nie został znaleziony w DOM");
-        }
-
-        // Ustawienia formularza
-        if (!transaction) {
-            document.getElementById('transactionId').value = '';
-            document.getElementById('title').value = transaction.title;
-            document.getElementById('amount').value = transaction.amount;
-            document.getElementById('category').value = transaction.category;
-            document.getElementById('date').value = transaction.date;
-            document.getElementById('notes').value = transaction.notes || '';
-            
-            if (transaction.type === 'income') {
-                document.getElementById('incomeType').checked = true;
-            } else {
-                document.getElementById('expenseType').checked = true;
+        function openModal(transaction = null) {
+            if (!userId) {
+                alert('Musisz być zalogowany, aby dodawać transakcje');
+                return;
             }
             
-            document.getElementById('modalTitle').textContent = 'Edytuj transakcję';
-            document.getElementById('submitBtn').textContent = 'Zapisz zmiany';
-        } else {
-            // Tryb dodawania
-            document.getElementById('transactionForm').reset();
-            document.getElementById('incomeType').checked = true;
-            document.getElementById('date').value = new Date().toISOString().split('T')[0];
-            document.getElementById('modalTitle').textContent = 'Dodaj nową transakcję';
-            document.getElementById('submitBtn').textContent = 'Dodaj transakcję';
+            if (transaction) {
+                // Tryb edycji
+                modalTitle.textContent = 'Edytuj transakcję';
+                submitBtn.textContent = 'Zapisz zmiany';
+                transactionIdInput.value = transaction.id;
+                document.getElementById('title').value = transaction.title;
+                document.getElementById('amount').value = transaction.amount;
+                document.getElementById('category').value = transaction.category;
+                document.getElementById('date').value = transaction.date;
+                document.getElementById('notes').value = transaction.notes || '';
+                
+                if (transaction.type === 'income') {
+                    document.getElementById('incomeType').checked = true;
+                } else {
+                    document.getElementById('expenseType').checked = true;
+                }
+                
+                updateCategoryOptions();
+            } else {
+                // Tryb dodawania
+                modalTitle.textContent = 'Dodaj nową transakcję';
+                submitBtn.textContent = 'Dodaj transakcję';
+                transactionForm.reset();
+                document.getElementById('date').value = new Date().toISOString().split('T')[0];
+                document.getElementById('incomeType').checked = true;
+                updateCategoryOptions();
+            }
+            
+            transactionModal.classList.add('active');
+            document.body.style.overflow = 'hidden';
         }
-        
-        updateCategoryOptions();
-        transactionModal.classList.add('active');
-        document.body.style.overflow = 'hidden';
-        
-        console.log("Modal otwarty poprawnie");
-    } catch (error) {
-        console.error("Błąd podczas otwierania modala:", error);
-        alert("Wystąpił błąd podczas otwierania formularza.");
-    }
-}
 
         // Zamknij modal
         function closeModal() {
@@ -1223,40 +1302,48 @@ function openModal(transaction = null) {
         }
 
         // Obsługa formularza transakcji
-if (transactionIdInput.value) {
-    // Edycja istniejącej transakcji
-    database.ref('transactions/' + transaction.id).set(transaction)
-        .then(() => {
-            console.log("Transakcja zaktualizowana!");
-            renderTransactions();
-            updateSummary();
-            updateCalendar();
+        function handleTransactionSubmit(e) {
+            e.preventDefault();
+            
+            const type = document.querySelector('input[name="type"]:checked').value;
+            const title = document.getElementById('title').value;
+            const amount = parseFloat(document.getElementById('amount').value);
+            const category = document.getElementById('category').value;
+            const date = document.getElementById('date').value;
+            const notes = document.getElementById('notes').value;
+            const id = transactionIdInput.value;
+            
+            const transaction = {
+                id,
+                type,
+                title,
+                amount,
+                category,
+                date,
+                notes
+            };
+            
+            saveTransaction(transaction);
             closeModal();
-        })
-        .catch((error) => {
-            console.error("Błąd podczas aktualizacji transakcji:", error);
-            alert("Wystąpił błąd podczas zapisywania transakcji.");
-        });
-} else {
-    // Dodanie nowej transakcji
-    const newTransactionRef = database.ref('transactions').push();
-    transaction.id = newTransactionRef.key; // Nadaj unikalne ID
-    newTransactionRef.set(transaction)
-        .then(() => {
-            console.log("Transakcja dodana!");
-            renderTransactions();
-            updateSummary();
-            updateCalendar();
-            closeModal();
-        })
-        .catch((error) => {
-            console.error("Błąd podczas dodawania transakcji:", error);
-            alert("Wystąpił błąd podczas dodawania transakcji.");
-        });
-}
+        }
 
         // Renderuj listę transakcji
         function renderTransactions(filter = 'all') {
+            if (!userId) {
+                transactionsList.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-user"></i>
+                        <h3>Nie jesteś zalogowany</h3>
+                        <p>Zaloguj się, aby wyświetlić swoje transakcje</p>
+                        <button class="btn btn-primary" id="loginFromListBtn">
+                            <i class="fas fa-sign-in-alt"></i> Zaloguj
+                        </button>
+                    </div>
+                `;
+                document.getElementById('loginFromListBtn')?.addEventListener('click', login);
+                return;
+            }
+            
             if (transactions.length === 0) {
                 transactionsList.innerHTML = `
                     <div class="empty-state">
@@ -1320,11 +1407,7 @@ if (transactionIdInput.value) {
                 btn.addEventListener('click', (e) => {
                     const id = e.currentTarget.getAttribute('data-id');
                     if (confirm('Czy na pewno chcesz usunąć tę transakcję?')) {
-                        transactions = transactions.filter(t => t.id !== id);
-                        saveTransactions();
-                        renderTransactions();
-                        updateSummary();
-                        updateCalendar();
+                        deleteTransaction(id);
                     }
                 });
             });
@@ -1753,5 +1836,3 @@ if (transactionIdInput.value) {
     </script>
 </body>
 </html>
-
-
