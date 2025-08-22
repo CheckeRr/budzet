@@ -3700,7 +3700,7 @@
                 document.getElementById('expenseChange').textContent = '0%';
                 document.getElementById('balanceChange').textContent = '0%';
                 document.getElementById('savingsChange').textContent = '0%';
-                updateCharts([], [], [], []);
+                updateCharts([], [], [], [], []);
                 return;
             }
             // Oblicz przychody i wydatki z bieżącego miesiąca
@@ -3820,11 +3820,11 @@
             
             incomeChart = new Chart(incomeCtx, {
                 type: 'line',
-                data: {
+                 {
                     labels: ['', '', '', '', '', ''],
                     datasets: [{
                         label: 'Przychody',
-                        data: [0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0],
                         borderColor: '#4bb543',
                         backgroundColor: 'rgba(75, 181, 67, 0.1)',
                         borderWidth: 3,
@@ -3842,11 +3842,11 @@
             
             expenseChart = new Chart(expenseCtx, {
                 type: 'line',
-                data: {
+                 {
                     labels: ['', '', '', '', '', ''],
                     datasets: [{
                         label: 'Wydatki',
-                        data: [0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0],
                         borderColor: '#ff3333',
                         backgroundColor: 'rgba(255, 51, 51, 0.1)',
                         borderWidth: 3,
@@ -3864,11 +3864,11 @@
             
             balanceChart = new Chart(balanceCtx, {
                 type: 'bar',
-                data: {
+                 {
                     labels: ['', '', '', '', '', ''],
                     datasets: [{
                         label: 'Saldo',
-                        data: [0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0],
                         backgroundColor: '#4cc9f0',
                         borderColor: '#4cc9f0',
                         borderWidth: 0,
@@ -3885,7 +3885,7 @@
                     labels: ['', '', '', '', '', ''],
                     datasets: [{
                         label: 'Oszczędności',
-                        data: [0, 0, 0, 0, 0, 0],
+                         [0, 0, 0, 0, 0, 0],
                         backgroundColor: '#7209b7',
                         borderColor: '#7209b7',
                         borderWidth: 0,
@@ -3898,10 +3898,10 @@
             
             expensesChart = new Chart(expensesCtx, {
                 type: 'doughnut',
-                data: {
+                 {
                     labels: [],
                     datasets: [{
-                        data: [],
+                         [],
                         backgroundColor: [],
                         borderWidth: 2,
                         borderColor: '#fff'
@@ -3946,7 +3946,7 @@
             
             incomeChartAnalytics = new Chart(incomeAnalyticsCtx, {
                 type: 'doughnut',
-                data: {
+                 {
                     labels: [],
                     datasets: [{
                         data: [],
@@ -3989,12 +3989,12 @@
             
             monthlySummaryChart = new Chart(monthlySummaryCtx, {
                 type: 'bar',
-                data: {
+                 {
                     labels: ['Czerwiec', 'Lipiec', 'Sierpień', 'Wrzesień'],
                     datasets: [
                         {
                             label: 'Przychody',
-                            data: [4800, 5000, 5100, 5200],
+                             [4800, 5000, 5100, 5200],
                             backgroundColor: 'rgba(75, 181, 67, 0.8)',
                             borderColor: '#4bb543',
                             borderWidth: 0,
@@ -4012,7 +4012,7 @@
                         },
                         {
                             label: 'Oszczędności',
-                            data: [600, 1000, 1200, 1400],
+                             [600, 1000, 1200, 1400],
                             backgroundColor: 'rgba(114, 9, 183, 0.8)',
                             borderColor: '#7209b7',
                             borderWidth: 0,
@@ -4060,7 +4060,7 @@
             
             expensesOverTimeChart = new Chart(expensesOverTimeCtx, {
                 type: 'bar',
-                data: {
+                 {
                     labels: [],
                     datasets: [{
                         label: 'Wydatki',
@@ -4104,12 +4104,12 @@
             
             trendsChart = new Chart(trendsCtx, {
                 type: 'line',
-                data: {
+                 {
                     labels: [],
                     datasets: [
                         {
                             label: 'Przychody',
-                            data: [],
+                             [],
                             borderColor: '#4bb543',
                             backgroundColor: 'rgba(75, 181, 67, 0.1)',
                             borderWidth: 3,
@@ -4123,7 +4123,7 @@
                         },
                         {
                             label: 'Wydatki',
-                            data: [],
+                             [],
                             borderColor: '#ff3333',
                             backgroundColor: 'rgba(255, 51, 51, 0.1)',
                             borderWidth: 3,
@@ -4176,11 +4176,11 @@
             
             balanceTrendChart = new Chart(balanceTrendCtx, {
                 type: 'bar',
-                data: {
+                 {
                     labels: [],
                     datasets: [{
                         label: 'Saldo',
-                        data: [],
+                         [],
                         backgroundColor: '#4cc9f0',
                         borderColor: '#4cc9f0',
                         borderWidth: 0,
