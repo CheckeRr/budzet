@@ -3,142 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Smart Budget - Nowoczesny Planer Finansów</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <title>Smart Budget - Planer Finansów Osobistych</title>
     <style>
         :root {
             --primary-color: #4361ee;
-            --primary-light: #6c8eff;
-            --primary-dark: #3f37c9;
-            --secondary-color: #7209b7;
+            --secondary-color: #3f37c9;
             --accent-color: #4cc9f0;
-            --success-color: #4bb543;
-            --success-light: #80ed99;
-            --danger-color: #ff3333;
-            --danger-light: #ff6b6b;
-            --warning-color: #ffcc00;
             --light-color: #f8f9fa;
             --dark-color: #212529;
-            --gray-100: #f8f9fa;
-            --gray-200: #e9ecef;
-            --gray-300: #dee2e6;
-            --gray-400: #ced4da;
-            --gray-500: #adb5bd;
-            --gray-600: #6c757d;
-            --gray-700: #495057;
-            --gray-800: #343a40;
-            --gray-900: #212529;
-            --border-radius: 16px;
-            --border-radius-sm: 8px;
-            --box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
-            --box-shadow-lg: 0 15px 40px rgba(0, 0, 0, 0.12);
+            --success-color: #4bb543;
+            --danger-color: #ff3333;
+            --warning-color: #ffcc00;
+            --border-radius: 8px;
+            --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
             --transition: all 0.3s ease;
-            --card-bg: rgba(255, 255, 255, 0.95);
-            --sidebar-bg: rgba(255, 255, 255, 0.98);
-            --background-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            --background-gradient-alt: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
-            --glass-effect: rgba(255, 255, 255, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.2);
-        }
-
-        .dark-theme {
-            --primary-color: #6c8eff;
-            --primary-light: #8fa3ff;
-            --primary-dark: #5a67d8;
-            --secondary-color: #9d4edd;
-            --accent-color: #6ee7ff;
-            --success-color: #68d391;
-            --success-light: #9ae6b4;
-            --danger-color: #fc8181;
-            --danger-light: #feb2b2;
-            --warning-color: #faf089;
-            --light-color: #2d3748;
-            --dark-color: #e2e8f0;
-            --gray-100: #1a202c;
-            --gray-200: #2d3748;
-            --gray-300: #4a5568;
-            --gray-400: #718096;
-            --gray-500: #a0aec0;
-            --gray-600: #cbd5e0;
-            --gray-700: #e2e8f0;
-            --gray-800: #edf2f7;
-            --gray-900: #f7fafc;
-            --card-bg: rgba(26, 32, 44, 0.95);
-            --sidebar-bg: rgba(26, 32, 44, 0.98);
-            --background-gradient: linear-gradient(135deg, #2a4365 0%, #1a365d 100%);
-            --background-gradient-alt: linear-gradient(135deg, #805ad5 0%, #d53f8c 100%);
-            --glass-effect: rgba(0, 0, 0, 0.1);
-            --glass-border: rgba(255, 255, 255, 0.05);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
 
         body {
-            background: var(--background-gradient);
+            background-color: #f5f7fa;
             color: var(--dark-color);
             line-height: 1.6;
-            min-height: 100vh;
-            transition: var(--transition);
-            padding: 0;
-            overflow-x: hidden;
         }
 
-        .app-container {
-            display: flex;
-            flex-direction: column;
-            min-height: 100vh;
-            max-width: 1600px;
+        .container {
+            max-width: 1200px;
             margin: 0 auto;
-            position: relative;
+            padding: 20px;
         }
 
-        /* Nowy header - bardziej nowoczesny */
-        .app-header {
+        header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 30px;
-            background: var(--glass-effect);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border-bottom: 1px solid var(--glass-border);
-            position: sticky;
-            top: 0;
-            z-index: 100;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #e0e0e0;
         }
 
         .logo {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            font-weight: 800;
             font-size: 24px;
-            color: white;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .logo-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            background: rgba(255, 255, 255, 0.2);
+            font-weight: 700;
+            color: var(--primary-color);
             display: flex;
             align-items: center;
-            justify-content: center;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
         }
 
-        .logo-icon i {
-            font-size: 20px;
-            color: white;
+        .logo i {
+            margin-right: 10px;
+            font-size: 28px;
         }
 
         .user-actions {
@@ -147,239 +66,143 @@
             align-items: center;
         }
 
-        .user-badge {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 16px;
-            background: var(--glass-effect);
-            border-radius: 50px;
-            color: white;
-            font-weight: 500;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-        }
-
-        .user-avatar {
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            background: var(--primary-color);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: white;
-            font-weight: bold;
-        }
-
-        .theme-toggle {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: var(--glass-effect);
-            border: 1px solid var(--glass-border);
-            color: white;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--border-radius);
             cursor: pointer;
+            font-weight: 600;
             transition: var(--transition);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
         }
 
-        .theme-toggle:hover {
-            transform: rotate(15deg);
-            background: rgba(255, 255, 255, 0.2);
+        .btn-primary {
+            background-color: var(--primary-color);
+            color: white;
         }
 
-        /* Główny układ */
-        .app-body {
-            display: flex;
-            flex: 1;
-            padding: 0;
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
         }
 
-        /* Nowy sidebar - bardziej nowoczesny */
-        .app-sidebar {
-            width: 280px;
-            background: var(--sidebar-bg);
-            border-right: 1px solid var(--glass-border);
-            padding: 30px 0;
-            display: flex;
-            flex-direction: column;
+        .btn-outline {
+            background-color: transparent;
+            border: 1px solid var(--primary-color);
+            color: var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-danger {
+            background-color: var(--danger-color);
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background-color: #cc0000;
+            transform: translateY(-2px);
+        }
+
+        .btn-sm {
+            padding: 5px 10px;
+            font-size: 13px;
+        }
+
+        .dashboard {
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+        }
+
+        .sidebar {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
             box-shadow: var(--box-shadow);
-            transition: var(--transition);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
+            height: fit-content;
         }
 
         .sidebar-nav {
             list-style: none;
-            padding: 0 20px;
         }
 
         .sidebar-nav li {
-            margin-bottom: 5px;
+            margin-bottom: 10px;
         }
 
         .sidebar-nav a {
             display: flex;
             align-items: center;
-            gap: 15px;
-            padding: 14px 20px;
-            color: var(--gray-700);
+            padding: 12px 15px;
+            color: var(--dark-color);
             text-decoration: none;
-            border-radius: var(--border-radius-sm);
+            border-radius: var(--border-radius);
             transition: var(--transition);
-            font-weight: 500;
         }
 
         .sidebar-nav a:hover, .sidebar-nav a.active {
-            background: var(--primary-color);
-            color: white;
-            transform: translateX(5px);
-            box-shadow: 0 5px 15px rgba(67, 97, 238, 0.3);
+            background-color: #f0f4f8;
+            color: var(--primary-color);
         }
 
         .sidebar-nav i {
-            font-size: 20px;
-            width: 24px;
-            text-align: center;
+            margin-right: 10px;
+            font-size: 18px;
         }
 
-        .sidebar-footer {
-            margin-top: auto;
-            padding: 20px;
-            border-top: 1px solid var(--gray-200);
-            color: var(--gray-600);
-            font-size: 13px;
-            text-align: center;
-        }
-
-        /* Główna zawartość */
-        .app-main {
-            flex: 1;
-            padding: 30px;
-            overflow-y: auto;
-            background: var(--gray-100);
-        }
-
-        .welcome-banner {
-            background: var(--background-gradient-alt);
-            border-radius: var(--border-radius);
-            padding: 30px;
-            color: white;
-            margin-bottom: 30px;
-            box-shadow: var(--box-shadow);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .welcome-banner::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            right: -50%;
-            width: 100%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
-            transform: rotate(-15deg);
-        }
-
-        .welcome-banner h1 {
-            font-size: 28px;
-            font-weight: 700;
-            margin-bottom: 10px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .welcome-banner p {
-            font-size: 16px;
-            opacity: 0.9;
-            max-width: 600px;
-            position: relative;
-            z-index: 1;
-        }
-
-        .dashboard-grid {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 24px;
-        }
-
-        /* Karty podsumowania - nowy design */
-        .summary-card {
-            grid-column: span 4;
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            padding: 24px;
-            box-shadow: var(--box-shadow);
-            transition: var(--transition);
+        .main-content {
             display: flex;
             flex-direction: column;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
+            gap: 30px;
         }
 
-        .summary-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--box-shadow-lg);
+        .content-section {
+            display: none;
         }
 
-        .summary-card-header {
+        .content-section.active {
+            display: block;
+        }
+
+        .summary-cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 20px;
+            box-shadow: var(--box-shadow);
+        }
+
+        .card-header {
             display: flex;
             justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 20px;
+            align-items: center;
+            margin-bottom: 15px;
         }
 
-        .summary-card-title {
+        .card-title {
             font-size: 16px;
             font-weight: 600;
-            color: var(--gray-600);
+            color: #6c757d;
         }
 
-        .summary-card-icon {
-            width: 50px;
-            height: 50px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 20px;
-        }
-
-        .income-icon {
-            background: rgba(75, 181, 67, 0.1);
-            color: var(--success-color);
-        }
-
-        .expense-icon {
-            background: rgba(255, 51, 51, 0.1);
-            color: var(--danger-color);
-        }
-
-        .balance-icon {
-            background: rgba(76, 201, 240, 0.1);
-            color: var(--accent-color);
-        }
-
-        .summary-card-value {
-            font-size: 28px;
+        .card-value {
+            font-size: 24px;
             font-weight: 700;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
         }
 
-        .summary-card-change {
+        .card-change {
+            font-size: 14px;
             display: flex;
             align-items: center;
-            gap: 5px;
-            font-size: 14px;
-            font-weight: 500;
         }
 
         .positive {
@@ -394,128 +217,70 @@
             color: var(--warning-color);
         }
 
-        .summary-card-chart {
-            height: 60px;
-            margin-top: 20px;
-        }
-
-        /* Sekcje zawartości */
-        .content-section {
-            display: none;
-        }
-
-        .content-section.active {
-            display: block;
-            animation: fadeIn 0.5s ease;
-        }
-
-        .section-header {
+        .card-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
             display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
+            justify-content: center;
+            font-size: 20px;
+        }
+
+        .income-icon {
+            background-color: rgba(75, 181, 67, 0.1);
+            color: var(--success-color);
+        }
+
+        .expense-icon {
+            background-color: rgba(255, 51, 51, 0.1);
+            color: var(--danger-color);
+        }
+
+        .balance-icon {
+            background-color: rgba(76, 201, 240, 0.1);
+            color: var(--accent-color);
         }
 
         .section-title {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--gray-800);
-        }
-
-        .section-actions {
-            display: flex;
-            gap: 12px;
-        }
-
-        /* Przyciski - nowy design */
-        .btn {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            gap: 8px;
-            padding: 12px 24px;
-            border: none;
-            border-radius: var(--border-radius-sm);
-            cursor: pointer;
+            font-size: 20px;
             font-weight: 600;
-            transition: var(--transition);
-            font-size: 14px;
+            margin-bottom: 20px;
         }
 
-        .btn-primary {
-            background: var(--primary-color);
-            color: white;
-            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
-        }
-
-        .btn-primary:hover {
-            background: var(--primary-dark);
-            transform: translateY(-2px);
-            box-shadow: 0 6px 16px rgba(67, 97, 238, 0.4);
-        }
-
-        .btn-outline {
-            background: transparent;
-            border: 1px solid var(--primary-color);
-            color: var(--primary-color);
-        }
-
-        .btn-outline:hover {
-            background: var(--primary-color);
-            color: white;
-        }
-
-        .btn-sm {
-            padding: 8px 16px;
-            font-size: 13px;
-        }
-
-        /* Karta transakcji */
-        .transactions-card {
-            grid-column: span 8;
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            padding: 24px;
-            box-shadow: var(--box-shadow);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-        }
-
-        .transactions-list {
+        .transactions {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 15px;
         }
 
         .transaction {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 16px;
-            background: var(--gray-100);
-            border-radius: var(--border-radius-sm);
+            padding: 15px;
+            background-color: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
             transition: var(--transition);
-            border: 1px solid transparent;
         }
 
         .transaction:hover {
-            border-color: var(--primary-light);
             transform: translateY(-2px);
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
         }
 
         .transaction-info {
             display: flex;
             align-items: center;
-            gap: 16px;
+            gap: 15px;
             flex: 1;
         }
 
         .transaction-icon {
-            width: 44px;
-            height: 44px;
-            border-radius: 12px;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
@@ -525,27 +290,31 @@
         .transaction-details {
             display: flex;
             flex-direction: column;
+            flex: 1;
         }
 
         .transaction-title {
             font-weight: 600;
-            color: var(--gray-800);
         }
 
-        .transaction-meta {
+        .transaction-category {
             font-size: 13px;
-            color: var(--gray-600);
+            color: #6c757d;
+        }
+
+        .transaction-date {
+            font-size: 12px;
+            color: #adb5bd;
         }
 
         .transaction-amount {
-            font-weight: 700;
+            font-weight: 600;
             margin: 0 15px;
-            font-size: 16px;
         }
 
         .transaction-actions {
             display: flex;
-            gap: 8px;
+            gap: 5px;
         }
 
         .income {
@@ -556,338 +325,90 @@
             color: var(--danger-color);
         }
 
-        /* Karta celów oszczędnościowych */
-        .goals-card {
-            grid-column: span 4;
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            padding: 24px;
-            box-shadow: var(--box-shadow);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-        }
-
-        .goals-list {
+        .add-transaction {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background-color: var(--primary-color);
+            color: white;
             display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        .goal-item {
-            background: var(--gray-100);
-            border-radius: var(--border-radius-sm);
-            padding: 16px;
-            border: 1px solid var(--gray-200);
-        }
-
-        .goal-header {
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .goal-title {
-            font-weight: 600;
-            color: var(--gray-800);
-        }
-
-        .goal-amount {
-            font-weight: 700;
-            color: var(--primary-color);
-        }
-
-        .goal-progress {
-            margin-top: 12px;
-        }
-
-        .goal-progress-bar {
-            height: 8px;
-            background: var(--gray-200);
-            border-radius: 4px;
-            overflow: hidden;
-        }
-
-        .goal-progress-fill {
-            height: 100%;
-            border-radius: 4px;
-            background: var(--success-color);
-            transition: width 0.5s ease;
-        }
-
-        .goal-info {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 8px;
-            font-size: 13px;
-            color: var(--gray-600);
-        }
-
-        /* Nowy design dla zakładki Analiza */
-        .analytics-grid {
-            display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            gap: 24px;
-        }
-
-        .analytics-card {
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            padding: 24px;
-            box-shadow: var(--box-shadow);
+            justify-content: center;
+            font-size: 24px;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(67, 97, 238, 0.3);
             transition: var(--transition);
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-            border: 1px solid var(--glass-border);
-        }
-
-        .analytics-card:hover {
-            transform: translateY(-5px);
-            box-shadow: var(--box-shadow-lg);
-        }
-
-        .analytics-card-large {
-            grid-column: span 8;
-        }
-
-        .analytics-card-small {
-            grid-column: span 4;
-        }
-
-        .analytics-card-full {
-            grid-column: span 12;
-        }
-
-        .analytics-chart-container {
-            height: 300px;
-            margin-top: 20px;
-        }
-
-        .analytics-tabs {
-            display: flex;
-            gap: 8px;
-            margin-bottom: 20px;
-            padding: 4px;
-            background: var(--gray-100);
-            border-radius: var(--border-radius-sm);
-        }
-
-        .analytics-tab {
-            padding: 8px 16px;
-            border-radius: var(--border-radius-sm);
-            background: transparent;
             border: none;
-            cursor: pointer;
-            transition: var(--transition);
-            font-weight: 500;
-            color: var(--gray-600);
         }
 
-        .analytics-tab.active {
-            background: var(--primary-color);
-            color: white;
+        .add-transaction:hover {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 16px rgba(67, 97, 238, 0.4);
         }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 16px;
-            margin-bottom: 20px;
-        }
-
-        .stat-card {
-            background: var(--gray-100);
-            border-radius: var(--border-radius-sm);
-            padding: 16px;
-            text-align: center;
-            border: 1px solid var(--gray-200);
-        }
-
-        .stat-value {
-            font-size: 20px;
-            font-weight: 700;
-            margin-bottom: 5px;
-        }
-
-        .stat-label {
-            font-size: 14px;
-            color: var(--gray-600);
-        }
-
-        /* Historia transakcji */
-        .history-filters {
-            display: flex;
-            gap: 12px;
-            margin-bottom: 20px;
-            flex-wrap: wrap;
-        }
-
-        .history-filter {
-            padding: 8px 16px;
-            border-radius: var(--border-radius-sm);
-            border: 1px solid var(--gray-300);
-            background: var(--gray-100);
-            color: var(--gray-700);
-        }
-
-        .pagination {
-            display: flex;
-            justify-content: center;
-            gap: 8px;
-            margin-top: 20px;
-        }
-
-        .pagination-btn {
-            width: 36px;
-            height: 36px;
-            border-radius: var(--border-radius-sm);
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 1px solid var(--gray-300);
-            background: var(--gray-100);
-            color: var(--gray-700);
-            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: var(--transition);
+            z-index: 1000;
+        }
+
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: white;
+            border-radius: var(--border-radius);
+            width: 100%;
+            max-width: 500px;
+            padding: 30px;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+            transform: translateY(-20px);
             transition: var(--transition);
         }
 
-        .pagination-btn.active {
-            background: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
+        .modal.active .modal-content {
+            transform: translateY(0);
         }
 
-        /* Kalendarz */
-        .calendar {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 8px;
-        }
-
-        .calendar-header {
-            font-weight: 600;
-            text-align: center;
-            padding: 12px;
-            color: var(--gray-700);
-        }
-
-        .calendar-day {
-            padding: 12px;
-            min-height: 100px;
-            border: 1px solid var(--gray-200);
-            border-radius: var(--border-radius-sm);
-            background: var(--gray-100);
-            transition: var(--transition);
-        }
-
-        .calendar-day:hover {
-            border-color: var(--primary-color);
-        }
-
-        .calendar-day.empty {
-            background: var(--gray-200);
-            border-color: var(--gray-300);
-        }
-
-        .calendar-day.today {
-            background: var(--primary-light);
-            color: white;
-            border-color: var(--primary-color);
-        }
-
-        .calendar-day-header {
-            font-weight: 600;
-            margin-bottom: 8px;
-            padding-bottom: 8px;
-            border-bottom: 1px solid var(--gray-200);
-        }
-
-        .calendar-transaction {
-            font-size: 12px;
-            padding: 4px 6px;
-            margin-bottom: 4px;
-            border-radius: 4px;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        .calendar-transaction.income {
-            background: rgba(75, 181, 67, 0.1);
-            color: var(--success-color);
-        }
-
-        .calendar-transaction.expense {
-            background: rgba(255, 51, 51, 0.1);
-            color: var(--danger-color);
-        }
-
-        /* Kategorie */
-        .categories-list {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-            gap: 16px;
-        }
-
-        .category-item {
+        .modal-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 16px;
-            background: var(--gray-100);
-            border-radius: var(--border-radius-sm);
-            border: 1px solid var(--gray-200);
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--dark-color);
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #6c757d;
             transition: var(--transition);
         }
 
-        .category-item:hover {
-            border-color: var(--primary-color);
-            transform: translateY(-2px);
-        }
-
-        .category-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .category-icon {
-            width: 40px;
-            height: 40px;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 16px;
-            color: white;
-        }
-
-        .category-actions {
-            display: flex;
-            gap: 8px;
-        }
-
-        /* Ustawienia */
-        .settings-form {
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-        }
-
-        .settings-group {
-            background: var(--card-bg);
-            border-radius: var(--border-radius);
-            padding: 24px;
-            box-shadow: var(--box-shadow);
-            border: 1px solid var(--glass-border);
-        }
-
-        .settings-title {
-            font-size: 18px;
-            font-weight: 600;
-            margin-bottom: 16px;
-            color: var(--primary-color);
+        .close-modal:hover {
+            color: var(--danger-color);
         }
 
         .form-group {
@@ -898,18 +419,17 @@
             display: block;
             margin-bottom: 8px;
             font-weight: 500;
-            color: var(--gray-700);
+            color: var(--dark-color);
         }
 
         .form-control {
             width: 100%;
-            padding: 12px 16px;
-            border: 1px solid var(--gray-300);
-            border-radius: var(--border-radius-sm);
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: var(--border-radius);
             font-size: 16px;
             transition: var(--transition);
-            background: var(--gray-100);
-            color: var(--gray-800);
+            background-color: white;
         }
 
         .form-control:focus {
@@ -928,259 +448,347 @@
 
         .btn-group {
             display: flex;
-            gap: 12px;
+            gap: 10px;
         }
 
         .btn-group .btn {
             flex: 1;
         }
 
-        /* Przycisk dodawania transakcji */
-        .fab-button {
-            position: fixed;
-            bottom: 30px;
-            right: 30px;
-            width: 64px;
-            height: 64px;
-            border-radius: 50%;
-            background: var(--primary-color);
-            color: white;
+        .type-toggle {
             display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+
+        .type-toggle input {
+            display: none;
+        }
+
+        .type-toggle label {
+            flex: 1;
+            text-align: center;
+            padding: 12px;
             cursor: pointer;
-            box-shadow: 0 6px 20px rgba(67, 97, 238, 0.4);
             transition: var(--transition);
-            border: none;
-            z-index: 100;
+            background-color: #f0f4f8;
+            color: #6c757d;
+            font-weight: 500;
         }
 
-        .fab-button:hover {
-            transform: translateY(-5px) scale(1.05);
-            box-shadow: 0 10px 25px rgba(67, 97, 238, 0.5);
+        .type-toggle input:checked + label {
+            background-color: var(--primary-color);
+            color: white;
         }
 
-        /* Stany puste */
+        .type-toggle label:first-of-type {
+            border-radius: var(--border-radius) 0 0 var(--border-radius);
+        }
+
+        .type-toggle label:last-of-type {
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+        }
+
+        .chart-container {
+            height: 300px;
+            margin-top: 20px;
+        }
+
         .empty-state {
             text-align: center;
             padding: 40px 20px;
-            color: var(--gray-600);
+            color: #6c757d;
         }
 
         .empty-state i {
-            font-size: 48px;
-            margin-bottom: 16px;
-            color: var(--gray-400);
-        }
-
-        .empty-state h3 {
-            font-size: 20px;
-            margin-bottom: 12px;
-            color: var(--gray-700);
+            font-size: 50px;
+            margin-bottom: 20px;
+            color: #adb5bd;
         }
 
         .empty-state p {
-            margin-bottom: 24px;
+            margin-bottom: 20px;
         }
 
-        /* Responsywność */
-        @media (max-width: 1200px) {
-            .dashboard-grid, .analytics-grid {
-                grid-template-columns: repeat(6, 1fr);
-            }
-            
-            .summary-card, .analytics-card-small {
-                grid-column: span 3;
-            }
-            
-            .transactions-card, .analytics-card-large {
-                grid-column: span 6;
-            }
-            
-            .goals-card, .analytics-card-full {
-                grid-column: span 6;
-            }
-            
-            .stats-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        .filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            padding: 8px 15px;
+            border-radius: var(--border-radius);
+            background-color: #f0f4f8;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .filter-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+
+        .calendar-header {
+            font-weight: bold;
+            text-align: center;
+            padding: 10px;
+            background-color: #f0f4f8;
+            border-radius: var(--border-radius);
+        }
+
+        .calendar-day {
+            padding: 10px;
+            min-height: 80px;
+            border: 1px solid #e0e0e0;
+            border-radius: var(--border-radius);
+        }
+
+        .calendar-day.empty {
+            background-color: #f9f9f9;
+        }
+
+        .calendar-day.today {
+            background-color: rgba(67, 97, 238, 0.1);
+            border-color: var(--primary-color);
+        }
+
+        .calendar-day-header {
+            font-weight: bold;
+            margin-bottom: 5px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .calendar-transaction {
+            font-size: 12px;
+            padding: 2px 5px;
+            margin-bottom: 3px;
+            border-radius: 3px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .calendar-transaction.income {
+            background-color: rgba(75, 181, 67, 0.1);
+            color: var(--success-color);
+        }
+
+        .calendar-transaction.expense {
+            background-color: rgba(255, 51, 51, 0.1);
+            color: var(--danger-color);
+        }
+
+        .settings-form {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .settings-group {
+            background-color: white;
+            padding: 20px;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+        }
+
+        .settings-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+
+        .categories-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .category-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 15px;
+            background-color: #f8f9fa;
+            border-radius: var(--border-radius);
+        }
+
+        .category-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .category-icon {
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .category-actions {
+            display: flex;
+            gap: 5px;
+        }
+
+        .history-filters {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .history-filters select {
+            padding: 8px 15px;
+            border-radius: var(--border-radius);
+            border: 1px solid #e0e0e0;
+        }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        .pagination-btn {
+            padding: 8px 15px;
+            border-radius: var(--border-radius);
+            background-color: #f0f4f8;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .pagination-btn.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .analytics-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .analytics-tab {
+            padding: 10px 20px;
+            border-radius: var(--border-radius);
+            background-color: #f0f4f8;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .analytics-tab.active {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .analytics-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
         }
 
         @media (max-width: 992px) {
-            .app-sidebar {
-                width: 80px;
-                padding: 20px 0;
+            .dashboard {
+                grid-template-columns: 1fr;
             }
-            
-            .sidebar-nav span {
-                display: none;
+
+            .summary-cards {
+                grid-template-columns: 1fr;
             }
-            
-            .sidebar-footer {
-                display: none;
-            }
-            
-            .summary-card, .analytics-card-small, .analytics-card-large, .analytics-card-full {
-                grid-column: span 6;
-            }
-            
-            .stats-grid {
+
+            .analytics-grid {
                 grid-template-columns: 1fr;
             }
         }
 
-        @media (max-width: 768px) {
-            .app-body {
-                flex-direction: column;
-            }
-            
-            .app-sidebar {
-                width: 100%;
-                height: auto;
-                padding: 0;
-                order: 2;
-            }
-            
-            .sidebar-nav {
-                display: flex;
-                overflow-x: auto;
-                padding: 15px;
-            }
-            
-            .sidebar-nav li {
-                margin-bottom: 0;
-                margin-right: 10px;
-            }
-            
-            .sidebar-nav a {
-                padding: 12px 15px;
-            }
-            
-            .app-main {
-                order: 1;
-                padding: 20px;
-            }
-            
-            .dashboard-grid, .analytics-grid {
-                grid-template-columns: 1fr;
-            }
-            
-            .summary-card, .transactions-card, .goals-card, 
-            .analytics-card-small, .analytics-card-large, .analytics-card-full {
-                grid-column: span 1;
-            }
-            
-            .welcome-banner h1 {
-                font-size: 24px;
-            }
-            
-            .user-badge span {
-                display: none;
-            }
-            
-            .section-header {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 16px;
-            }
-            
-            .section-actions, .history-filters {
-                width: 100%;
-                justify-content: space-between;
-                flex-wrap: wrap;
-            }
-            
-            .calendar {
-                grid-template-columns: repeat(7, 1fr);
-                gap: 4px;
-            }
-            
-            .calendar-day {
-                min-height: 80px;
-                padding: 8px;
-                font-size: 12px;
-            }
-            
-            .calendar-transaction {
-                font-size: 10px;
-                padding: 2px 4px;
-            }
-        }
-
-        @media (max-width: 576px) {
-            .app-header {
-                padding: 15px 20px;
-            }
-            
-            .logo {
-                font-size: 20px;
-            }
-            
-            .logo-icon {
-                width: 36px;
-                height: 36px;
-            }
-            
-            .summary-card-value {
-                font-size: 24px;
-            }
-            
-            .transaction {
-                flex-direction: column;
-                align-items: flex-start;
-                gap: 12px;
-            }
-            
-            .transaction-amount {
-                margin: 0;
-                align-self: flex-end;
-            }
-            
-            .history-filters {
-                flex-direction: column;
-            }
-            
-            .categories-list {
-                grid-template-columns: 1fr;
-            }
-        }
-
-        /* Animacje */
+        /* Animations */
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
+            from { opacity: 0; }
+            to { opacity: 1; }
         }
 
         .fade-in {
-            animation: fadeIn 0.5s ease;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .stat-card {
+            background-color: white;
+            border-radius: var(--border-radius);
+            padding: 15px;
+            box-shadow: var(--box-shadow);
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 20px;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background-color: #f0f4f8;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            border-radius: 4px;
         }
     </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
 </head>
 <body>
-    <div class="app-container">
-        <header class="app-header">
+    <div class="container">
+        <header>
             <div class="logo">
-                <div class="logo-icon">
-                    <i class="fas fa-wallet"></i>
-                </div>
+                <i class="fas fa-wallet"></i>
                 <span>Smart Budget</span>
             </div>
             <div class="user-actions">
-                <div class="user-badge">
-                    <div class="user-avatar">
-                        <i class="fas fa-user"></i>
-                    </div>
-                    <span>Tryb jednoosobowy</span>
-                </div>
-                <button class="theme-toggle" id="themeToggle">
-                    <i class="fas fa-moon"></i>
-                </button>
+                <span>Tryb jednoosobowy</span>
             </div>
         </header>
 
-        <div class="app-body">
-            <aside class="app-sidebar">
+        <div class="dashboard">
+            <aside class="sidebar">
                 <ul class="sidebar-nav">
                     <li>
                         <a href="#" class="active" data-section="dashboard">
@@ -1207,12 +815,6 @@
                         </a>
                     </li>
                     <li>
-                        <a href="#" data-section="goals">
-                            <i class="fas fa-bullseye"></i>
-                            <span>Cele</span>
-                        </a>
-                    </li>
-                    <li>
                         <a href="#" data-section="categories">
                             <i class="fas fa-tags"></i>
                             <span>Kategorie</span>
@@ -1225,131 +827,84 @@
                         </a>
                     </li>
                 </ul>
-                <div class="sidebar-footer">
-                    Smart Budget &copy; 2023
-                </div>
             </aside>
 
-            <main class="app-main">
+            <main class="main-content">
                 <!-- Sekcja Dashboard -->
                 <div class="content-section active" id="dashboard-section">
-                    <div class="welcome-banner">
-                        <h1>Witaj w Smart Budget!</h1>
-                        <p>Śledź swoje finanse i osiągaj swoje cele oszczędnościowe w prosty i przejrzysty sposób.</p>
-                    </div>
-
-                    <div class="dashboard-grid">
-                        <div class="summary-card fade-in" id="incomeCard">
-                            <div class="summary-card-header">
-                                <div class="summary-card-title">Miesięczne przychody</div>
-                                <div class="summary-card-icon income-icon">
+                    <div class="summary-cards">
+                        <div class="card fade-in" id="incomeCard">
+                            <div class="card-header">
+                                <div>
+                                    <div class="card-title">Miesięczne przychody</div>
+                                    <div class="card-value" id="monthlyIncome">0 zł</div>
+                                    <div class="card-change positive">
+                                        <i class="fas fa-arrow-up"></i> <span id="incomeChange">0%</span> od ostatniego miesiąca
+                                    </div>
+                                </div>
+                                <div class="card-icon income-icon">
                                     <i class="fas fa-money-bill-wave"></i>
                                 </div>
                             </div>
-                            <div class="summary-card-value" id="monthlyIncome">0 zł</div>
-                            <div class="summary-card-change positive">
-                                <i class="fas fa-arrow-up"></i> <span id="incomeChange">0%</span> od ostatniego miesiąca
-                            </div>
-                            <div class="summary-card-chart">
+                            <div class="chart-container">
                                 <canvas id="incomeChart"></canvas>
                             </div>
                         </div>
 
-                        <div class="summary-card fade-in" id="expenseCard">
-                            <div class="summary-card-header">
-                                <div class="summary-card-title">Miesięczne wydatki</div>
-                                <div class="summary-card-icon expense-icon">
+                        <div class="card fade-in" id="expenseCard">
+                            <div class="card-header">
+                                <div>
+                                    <div class="card-title">Miesięczne wydatki</div>
+                                    <div class="card-value" id="monthlyExpense">0 zł</div>
+                                    <div class="card-change negative">
+                                        <i class="fas fa-arrow-down"></i> <span id="expenseChange">0%</span> od ostatniego miesiąca
+                                    </div>
+                                </div>
+                                <div class="card-icon expense-icon">
                                     <i class="fas fa-shopping-bag"></i>
                                 </div>
                             </div>
-                            <div class="summary-card-value" id="monthlyExpense">0 zł</div>
-                            <div class="summary-card-change negative">
-                                <i class="fas fa-arrow-up"></i> <span id="expenseChange">0%</span> od ostatniego miesiąca
-                            </div>
-                            <div class="summary-card-chart">
+                            <div class="chart-container">
                                 <canvas id="expenseChart"></canvas>
                             </div>
                         </div>
 
-                        <div class="summary-card fade-in" id="balanceCard">
-                            <div class="summary-card-header">
-                                <div class="summary-card-title">Bieżące saldo</div>
-                                <div class="summary-card-icon balance-icon">
+                        <div class="card fade-in" id="balanceCard">
+                            <div class="card-header">
+                                <div>
+                                    <div class="card-title">Bieżące saldo</div>
+                                    <div class="card-value" id="currentBalance">0 zł</div>
+                                    <div class="card-change neutral">
+                                        <i class="fas fa-equals"></i> <span id="balanceChange">0%</span> od ostatniego miesiąca
+                                    </div>
+                                </div>
+                                <div class="card-icon balance-icon">
                                     <i class="fas fa-piggy-bank"></i>
                                 </div>
                             </div>
-                            <div class="summary-card-value" id="currentBalance">0 zł</div>
-                            <div class="summary-card-change neutral">
-                                <i class="fas fa-equals"></i> <span id="balanceChange">0%</span> od ostatniego miesiąca
-                            </div>
-                            <div class="summary-card-chart">
+                            <div class="chart-container">
                                 <canvas id="balanceChart"></canvas>
                             </div>
                         </div>
+                    </div>
 
-                        <div class="transactions-card">
-                            <div class="section-header">
-                                <h2 class="section-title">Ostatnie transakcje</h2>
-                                <div class="section-actions">
-                                    <button class="btn btn-outline btn-sm active" data-filter="all">Wszystkie</button>
-                                    <button class="btn btn-outline btn-sm" data-filter="income">Przychody</button>
-                                    <button class="btn btn-outline btn-sm" data-filter="expense">Wydatki</button>
-                                </div>
-                            </div>
-                            <div class="transactions-list" id="transactionsList">
-                                <div class="empty-state">
-                                    <i class="fas fa-money-bill-wave"></i>
-                                    <h3>Brak transakcji</h3>
-                                    <p>Dodaj swoją pierwszą transakcję, klikając przycisk poniżej</p>
-                                    <button class="btn btn-primary" id="addFirstTransactionBtn">
-                                        <i class="fas fa-plus"></i> Dodaj transakcję
-                                    </button>
-                                </div>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="section-title">Ostatnie transakcje</h3>
+                            <div class="filters">
+                                <button class="filter-btn active" data-filter="all">Wszystkie</button>
+                                <button class="filter-btn" data-filter="income">Przychody</button>
+                                <button class="filter-btn" data-filter="expense">Wydatki</button>
                             </div>
                         </div>
-
-                        <div class="goals-card">
-                            <div class="section-header">
-                                <h2 class="section-title">Cele oszczędnościowe</h2>
-                                <button class="btn btn-primary btn-sm" id="addGoalBtn">
-                                    <i class="fas fa-plus"></i> Dodaj
+                        <div class="transactions" id="transactionsList">
+                            <div class="empty-state">
+                                <i class="fas fa-money-bill-wave"></i>
+                                <h3>Brak transakcji</h3>
+                                <p>Dodaj swoją pierwszą transakcję, klikając przycisk poniżej</p>
+                                <button class="btn btn-primary" id="addFirstTransactionBtn">
+                                    <i class="fas fa-plus"></i> Dodaj transakcję
                                 </button>
-                            </div>
-                            <div class="goals-list" id="savingsGoals">
-                                <div class="goal-item">
-                                    <div class="goal-header">
-                                        <div class="goal-title">Nowy samochód</div>
-                                        <div class="goal-amount">25 000 zł</div>
-                                    </div>
-                                    <div class="goal-progress">
-                                        <div class="goal-progress-bar">
-                                            <div class="goal-progress-fill" style="width: 40%"></div>
-                                        </div>
-                                        <div class="goal-info">
-                                            <span>10 000 zł</span>
-                                            <span>40%</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="goal-item">
-                                    <div class="goal-header">
-                                        <div class="goal-title">Wakacje</div>
-                                        <div class="goal-amount">5 000 zł</div>
-                                    </div>
-                                    <div class="goal-progress">
-                                        <div class="goal-progress-bar">
-                                            <div class="goal-progress-fill" style="width: 75%"></div>
-                                        </div>
-                                        <div class="goal-info">
-                                            <span>3 750 zł</span>
-                                            <span>75%</span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="add-goal-btn" id="addGoalBtnSection">
-                                    <i class="fas fa-plus-circle"></i>
-                                    <span>Dodaj nowy cel</span>
-                                </div>
                             </div>
                         </div>
                     </div>
@@ -1357,35 +912,37 @@
 
                 <!-- Sekcja Historia -->
                 <div class="content-section" id="history-section">
-                    <div class="section-header">
-                        <h2 class="section-title">Historia transakcji</h2>
-                        <div class="history-filters">
-                            <select class="history-filter" id="historyMonth">
-                                <option value="">Wszystkie miesiące</option>
-                                <option value="0">Styczeń</option>
-                                <option value="1">Luty</option>
-                                <option value="2">Marzec</option>
-                                <option value="3">Kwiecień</option>
-                                <option value="4">Maj</option>
-                                <option value="5">Czerwiec</option>
-                                <option value="6">Lipiec</option>
-                                <option value="7">Sierpień</option>
-                                <option value="8">Wrzesień</option>
-                                <option value="9">Październik</option>
-                                <option value="10">Listopad</option>
-                                <option value="11">Grudzień</option>
-                            </select>
-                            <select class="history-filter" id="historyYear">
-                                <option value="">Wszystkie lata</option>
-                            </select>
-                            <select class="history-filter" id="historyCategory">
-                                <option value="">Wszystkie kategorie</option>
-                            </select>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="section-title">Historia transakcji</h3>
+                            <div class="history-filters">
+                                <select id="historyMonth">
+                                    <option value="">Wszystkie miesiące</option>
+                                    <option value="0">Styczeń</option>
+                                    <option value="1">Luty</option>
+                                    <option value="2">Marzec</option>
+                                    <option value="3">Kwiecień</option>
+                                    <option value="4">Maj</option>
+                                    <option value="5">Czerwiec</option>
+                                    <option value="6">Lipiec</option>
+                                    <option value="7">Sierpień</option>
+                                    <option value="8">Wrzesień</option>
+                                    <option value="9">Październik</option>
+                                    <option value="10">Listopad</option>
+                                    <option value="11">Grudzień</option>
+                                </select>
+                                <select id="historyYear">
+                                    <option value="">Wszystkie lata</option>
+                                </select>
+                                <select id="historyCategory">
+                                    <option value="">Wszystkie kategorie</option>
+                                </select>
+                                <button class="btn btn-outline" id="applyHistoryFilters">
+                                    <i class="fas fa-filter"></i> Filtruj
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="analytics-card-full">
-                        <div class="transactions-list" id="historyList">
+                        <div class="transactions" id="historyList">
                             <div class="empty-state">
                                 <i class="fas fa-history"></i>
                                 <h3>Brak transakcji</h3>
@@ -1398,91 +955,103 @@
 
                 <!-- Sekcja Analiza -->
                 <div class="content-section" id="analytics-section">
-                    <div class="section-header">
-                        <h2 class="section-title">Analiza finansowa</h2>
-                        <div class="analytics-tabs">
-                            <button class="analytics-tab active" data-tab="overview">Przegląd</button>
-                            <button class="analytics-tab" data-tab="expenses">Wydatki</button>
-                            <button class="analytics-tab" data-tab="income">Przychody</button>
-                            <button class="analytics-tab" data-tab="trends">Trendy</button>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="section-title">Analiza finansowa</h3>
+                            <div class="analytics-tabs">
+                                <button class="analytics-tab active" data-tab="expenses">Wydatki</button>
+                                <button class="analytics-tab" data-tab="income">Przychody</button>
+                                <button class="analytics-tab" data-tab="trends">Trendy</button>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="analytics-grid">
-                        <div class="analytics-card-small">
-                            <div class="summary-card-header">
-                                <div class="summary-card-title">Łączne przychody</div>
-                                <div class="summary-card-icon income-icon">
-                                    <i class="fas fa-money-bill-wave"></i>
+                        
+                        <div class="analytics-content">
+                            <div class="analytics-tab-content active" id="expenses-tab">
+                                <div class="stats-grid">
+                                    <div class="stat-card">
+                                        <div class="stat-value" id="totalExpenses">0 zł</div>
+                                        <div class="stat-label">Łączne wydatki</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-value" id="avgExpenses">0 zł</div>
+                                        <div class="stat-label">Średnio miesięcznie</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-value" id="largestExpense">0 zł</div>
+                                        <div class="stat-label">Największy wydatek</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="analytics-grid">
+                                    <div class="card">
+                                        <h4>Podział wydatków według kategorii</h4>
+                                        <div class="chart-container" style="height: 300px;">
+                                            <canvas id="expensesChart"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <h4>Top 5 kategorii wydatków</h4>
+                                        <div id="topExpensesList"></div>
+                                    </div>
+                                </div>
+                                
+                                <div class="card">
+                                    <h4>Wydatki w czasie</h4>
+                                    <div class="chart-container" style="height: 300px;">
+                                        <canvas id="expensesOverTimeChart"></canvas>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="summary-card-value" id="totalIncome">0 zł</div>
-                            <div class="summary-card-change positive">
-                                <i class="fas fa-arrow-up"></i> <span id="totalIncomeChange">0%</span> od zeszłego roku
-                            </div>
-                        </div>
-
-                        <div class="analytics-card-small">
-                            <div class="summary-card-header">
-                                <div class="summary-card-title">Łączne wydatki</div>
-                                <div class="summary-card-icon expense-icon">
-                                    <i class="fas fa-shopping-bag"></i>
+                            
+                            <div class="analytics-tab-content" id="income-tab">
+                                <div class="stats-grid">
+                                    <div class="stat-card">
+                                        <div class="stat-value" id="totalIncome">0 zł</div>
+                                        <div class="stat-label">Łączne przychody</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-value" id="avgIncome">0 zł</div>
+                                        <div class="stat-label">Średnio miesięcznie</div>
+                                    </div>
+                                    <div class="stat-card">
+                                        <div class="stat-value" id="largestIncome">0 zł</div>
+                                        <div class="stat-label">Największy przychód</div>
+                                    </div>
+                                </div>
+                                
+                                <div class="analytics-grid">
+                                    <div class="card">
+                                        <h4>Podział przychodów według kategorii</h4>
+                                        <div class="chart-container" style="height: 300px;">
+                                            <canvas id="incomeChartAnalytics"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <h4>Top 5 kategorii przychodów</h4>
+                                        <div id="topIncomeList"></div>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="summary-card-value" id="totalExpenses">0 zł</div>
-                            <div class="summary-card-change negative">
-                                <i class="fas fa-arrow-up"></i> <span id="totalExpensesChange">0%</span> od zeszłego roku
-                            </div>
-                        </div>
-
-                        <div class="analytics-card-small">
-                            <div class="summary-card-header">
-                                <div class="summary-card-title">Średnie miesięczne saldo</div>
-                                <div class="summary-card-icon balance-icon">
-                                    <i class="fas fa-piggy-bank"></i>
+                            
+                            <div class="analytics-tab-content" id="trends-tab">
+                                <div class="card">
+                                    <h4>Trendy finansowe</h4>
+                                    <div class="chart-container" style="height: 400px;">
+                                        <canvas id="trendsChart"></canvas>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="summary-card-value" id="avgBalance">0 zł</div>
-                            <div class="summary-card-change neutral">
-                                <i class="fas fa-equals"></i> <span id="avgBalanceChange">0%</span> od zeszłego roku
-                            </div>
-                        </div>
-
-                        <div class="analytics-card-large">
-                            <h3 class="summary-card-title">Struktura wydatków</h3>
-                            <div class="analytics-chart-container">
-                                <canvas id="expensesChart"></canvas>
-                            </div>
-                        </div>
-
-                        <div class="analytics-card-large">
-                            <h3 class="summary-card-title">Struktura przychodów</h3>
-                            <div class="analytics-chart-container">
-                                <canvas id="incomeChartAnalytics"></canvas>
-                            </div>
-                        </div>
-
-                        <div class="analytics-card-full">
-                            <h3 class="summary-card-title">Trendy finansowe</h3>
-                            <div class="analytics-chart-container">
-                                <canvas id="trendsChart"></canvas>
-                            </div>
-                        </div>
-
-                        <div class="analytics-card-full">
-                            <h3 class="summary-card-title">Podsumowanie miesięczne</h3>
-                            <div class="stats-grid">
-                                <div class="stat-card">
-                                    <div class="stat-value" id="avgMonthlyIncome">0 zł</div>
-                                    <div class="stat-label">Średnie miesięczne przychody</div>
-                                </div>
-                                <div class="stat-card">
-                                    <div class="stat-value" id="avgMonthlyExpense">0 zł</div>
-                                    <div class="stat-label">Średnie miesięczne wydatki</div>
-                                </div>
-                                <div class="stat-card">
-                                    <div class="stat-value" id="savingsRate">0%</div>
-                                    <div class="stat-label">Wskaźnik oszczędności</div>
+                                
+                                <div class="analytics-grid">
+                                    <div class="card">
+                                        <h4>Bilans miesięczny</h4>
+                                        <div class="chart-container" style="height: 300px;">
+                                            <canvas id="balanceTrendChart"></canvas>
+                                        </div>
+                                    </div>
+                                    <div class="card">
+                                        <h4>Procentowy udział wydatków</h4>
+                                        <div id="expenseRatioStats"></div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -1491,101 +1060,34 @@
 
                 <!-- Sekcja Kalendarz -->
                 <div class="content-section" id="calendar-section">
-                    <div class="section-header">
-                        <h2 class="section-title">Kalendarz transakcji</h2>
-                        <div class="section-actions">
-                            <button class="btn btn-outline" id="prevMonthBtn">
-                                <i class="fas fa-chevron-left"></i>
-                            </button>
-                            <h3 id="currentMonthYear">Lipiec 2023</h3>
-                            <button class="btn btn-outline" id="nextMonthBtn">
-                                <i class="fas fa-chevron-right"></i>
-                            </button>
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="section-title">Kalendarz transakcji</h3>
+                            <div class="filters">
+                                <button class="btn btn-outline" id="prevMonthBtn">
+                                    <i class="fas fa-chevron-left"></i>
+                                </button>
+                                <h4 id="currentMonthYear">Lipiec 2023</h4>
+                                <button class="btn btn-outline" id="nextMonthBtn">
+                                    <i class="fas fa-chevron-right"></i>
+                                </button>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="analytics-card-full">
                         <div class="calendar" id="calendarGrid">
                             <!-- Kalendarz będzie generowany dynamicznie -->
                         </div>
                     </div>
                 </div>
 
-                <!-- Sekcja Cele -->
-                <div class="content-section" id="goals-section">
-                    <div class="section-header">
-                        <h2 class="section-title">Cele oszczędnościowe</h2>
-                        <button class="btn btn-primary" id="addGoalButton">
-                            <i class="fas fa-plus"></i> Dodaj cel
-                        </button>
-                    </div>
-                    
-                    <div class="analytics-card-full">
-                        <div class="goals-list" id="goalsList">
-                            <div class="goal-item">
-                                <div class="goal-header">
-                                    <div class="goal-title">Nowy samochód</div>
-                                    <div class="goal-amount">25 000 zł</div>
-                                </div>
-                                <div class="goal-progress">
-                                    <div class="goal-progress-bar">
-                                        <div class="goal-progress-fill" style="width: 40%"></div>
-                                    </div>
-                                    <div class="goal-info">
-                                        <span>10 000 zł</span>
-                                        <span>40%</span>
-                                    </div>
-                                </div>
-                                <div class="goal-actions" style="margin-top: 15px; display: flex; gap: 10px;">
-                                    <button class="btn btn-outline btn-sm">
-                                        <i class="fas fa-edit"></i> Edytuj
-                                    </button>
-                                    <button class="btn btn-danger btn-sm">
-                                        <i class="fas fa-trash"></i> Usuń
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="goal-item">
-                                <div class="goal-header">
-                                    <div class="goal-title">Wakacje</div>
-                                    <div class="goal-amount">5 000 zł</div>
-                                </div>
-                                <div class="goal-progress">
-                                    <div class="goal-progress-bar">
-                                        <div class="goal-progress-fill" style="width: 75%"></div>
-                                    </div>
-                                    <div class="goal-info">
-                                        <span>3 750 zł</span>
-                                        <span>75%</span>
-                                    </div>
-                                </div>
-                                <div class="goal-actions" style="margin-top: 15px; display: flex; gap: 10px;">
-                                    <button class="btn btn-outline btn-sm">
-                                        <i class="fas fa-edit"></i> Edytuj
-                                    </button>
-                                    <button class="btn btn-danger btn-sm">
-                                        <i class="fas fa-trash"></i> Usuń
-                                    </button>
-                                </div>
-                            </div>
-                            <div class="add-goal-btn" id="addGoalBtnSection">
-                                <i class="fas fa-plus-circle"></i>
-                                <span>Dodaj nowy cel</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Sekcja Kategorie -->
                 <div class="content-section" id="categories-section">
-                    <div class="section-header">
-                        <h2 class="section-title">Zarządzanie kategoriami</h2>
-                        <button class="btn btn-primary" id="addCategoryBtn">
-                            <i class="fas fa-plus"></i> Dodaj kategorię
-                        </button>
-                    </div>
-                    
-                    <div class="analytics-card-full">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3 class="section-title">Zarządzanie kategoriami</h3>
+                            <button class="btn btn-primary" id="addCategoryBtn">
+                                <i class="fas fa-plus"></i> Dodaj kategorię
+                            </button>
+                        </div>
                         <div class="categories-list" id="categoriesList">
                             <div class="empty-state">
                                 <i class="fas fa-tags"></i>
@@ -1598,14 +1100,11 @@
 
                 <!-- Sekcja Ustawienia -->
                 <div class="content-section" id="settings-section">
-                    <div class="section-header">
-                        <h2 class="section-title">Ustawienia aplikacji</h2>
-                    </div>
-                    
-                    <div class="analytics-card-full">
+                    <div class="card">
+                        <h3 class="section-title">Ustawienia aplikacji</h3>
                         <div class="settings-form">
                             <div class="settings-group">
-                                <h3 class="settings-title">Ogólne</h3>
+                                <h4 class="settings-title">Ogólne</h4>
                                 <div class="form-group">
                                     <label for="currency" class="form-label">Waluta</label>
                                     <select id="currency" class="form-control form-select">
@@ -1625,19 +1124,7 @@
                             </div>
 
                             <div class="settings-group">
-                                <h3 class="settings-title">Motyw</h3>
-                                <div class="form-group">
-                                    <label for="theme" class="form-label">Styl interfejsu</label>
-                                    <select id="theme" class="form-control form-select">
-                                        <option value="light" selected>Jasny</option>
-                                        <option value="dark">Ciemny</option>
-                                        <option value="auto">Automatyczny</option>
-                                    </select>
-                                </div>
-                            </div>
-
-                            <div class="settings-group">
-                                <h3 class="settings-title">Kopie zapasowe</h3>
+                                <h4 class="settings-title">Kopie zapasowe</h4>
                                 <div class="btn-group">
                                     <button class="btn btn-primary" id="exportBackupBtn">
                                         <i class="fas fa-file-export"></i> Eksportuj dane
@@ -1649,8 +1136,8 @@
                             </div>
 
                             <div class="settings-group">
-                                <h3 class="settings-title">Informacje</h3>
-                                <p>Wersja aplikacji: 2.0.0</p>
+                                <h4 class="settings-title">Informacje</h4>
+                                <p>Wersja aplikacji: 1.2.0</p>
                                 <p>Autor: Smart Budget Team</p>
                                 <p>Tryb: Jednoosobowy</p>
                             </div>
@@ -1661,7 +1148,7 @@
         </div>
     </div>
 
-    <button class="fab-button" id="addTransactionBtn">
+    <button class="add-transaction" id="addTransactionBtn">
         <i class="fas fa-plus"></i>
     </button>
 
@@ -1774,54 +1261,16 @@
         </div>
     </div>
 
-    <!-- Modal celów -->
-    <div class="modal" id="goalModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 class="modal-title" id="goalModalTitle">Dodaj nowy cel oszczędnościowy</h3>
-                <button class="close-modal" id="closeGoalModalBtn">&times;</button>
-            </div>
-            <form id="goalForm">
-                <input type="hidden" id="goalId">
-                
-                <div class="form-group">
-                    <label for="goalName" class="form-label">Nazwa celu</label>
-                    <input type="text" id="goalName" class="form-control" placeholder="np. Nowy samochód, Wakacje" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="goalTarget" class="form-label">Docelowa kwota (zł)</label>
-                    <input type="number" id="goalTarget" class="form-control" placeholder="0.00" min="0" step="0.01" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="goalCurrent" class="form-label">Aktualnie zaoszczędzone (zł)</label>
-                    <input type="number" id="goalCurrent" class="form-control" placeholder="0.00" min="0" step="0.01" required>
-                </div>
-
-                <div class="form-group">
-                    <label for="goalDeadline" class="form-label">Planowana data osiągnięcia</label>
-                    <input type="date" id="goalDeadline" class="form-control" required>
-                </div>
-
-                <div class="btn-group">
-                    <button type="button" class="btn btn-outline" id="cancelGoalBtn">Anuluj</button>
-                    <button type="submit" class="btn btn-primary" id="submitGoalBtn">Dodaj cel</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <script>
+        // Konfiguracja Firebase
         const firebaseConfig = {
-            // Tutaj wstaw swoją konfigurację Firebase
-            apiKey: "AIzaSyCtbSd7qG2tKkqOhMPBLewth3CnSzrTFmY",
-            authDomain: "budzet-5782a.firebaseapp.com",
-            databaseURL: "https://budzet-5782a-default-rtdb.firebaseio.com",
-            projectId: "budzet-5782a",
-            storageBucket: "budzet-5782a.firebasestorage.app",
-            messagingSenderId: "516868712666",
-            appId: "1:516868712666:web:197d2afbc38d828a955de3"
+            apiKey: "YOUR_API_KEY",
+            authDomain: "your-project-id.firebaseapp.com",
+            databaseURL: "https://your-project-id-default-rtdb.firebaseio.com",
+            projectId: "your-project-id",
+            storageBucket: "your-project-id.appspot.com",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
         };
 
         // Inicjalizacja Firebase
@@ -1834,15 +1283,14 @@
         // Główne dane aplikacji
         let transactions = [];
         let categories = [];
-        let goals = [];
         let currentMonth = new Date().getMonth();
         let currentYear = new Date().getFullYear();
         let editingTransactionId = null;
         let editingCategoryId = null;
-        let editingGoalId = null;
-        let incomeChart, expenseChart, balanceChart, expensesChart, incomeChartAnalytics, expensesOverTimeChart, trendsChart, balanceTrendChart, incomeTrendChart, expenseTrendChart;
+        let incomeChart, expenseChart, balanceChart, expensesChart, incomeChartAnalytics, expensesOverTimeChart, trendsChart, balanceTrendChart;
         let currentHistoryPage = 1;
         const transactionsPerPage = 10;
+        let currentAnalyticsTab = 'expenses';
 
         // Domyślne kategorie
         const defaultCategories = [
@@ -1892,20 +1340,10 @@
         const historyMonth = document.getElementById('historyMonth');
         const historyYear = document.getElementById('historyYear');
         const historyCategory = document.getElementById('historyCategory');
+        const applyHistoryFilters = document.getElementById('applyHistoryFilters');
         const historyPagination = document.getElementById('historyPagination');
-        const themeToggle = document.getElementById('themeToggle');
-        const themeSelect = document.getElementById('theme');
-        const addGoalBtn = document.getElementById('addGoalBtn');
-        const addGoalBtnSection = document.getElementById('addGoalBtnSection');
-        const addGoalButton = document.getElementById('addGoalButton');
-        const goalModal = document.getElementById('goalModal');
-        const closeGoalModalBtn = document.getElementById('closeGoalModalBtn');
-        const cancelGoalBtn = document.getElementById('cancelGoalBtn');
-        const goalForm = document.getElementById('goalForm');
-        const goalModalTitle = document.getElementById('goalModalTitle');
-        const submitGoalBtn = document.getElementById('submitGoalBtn');
-        const goalsList = document.getElementById('goalsList');
-        const savingsGoals = document.getElementById('savingsGoals');
+        const analyticsTabs = document.querySelectorAll('.analytics-tab');
+        const analyticsTabContents = document.querySelectorAll('.analytics-tab-content');
 
         // Inicjalizacja aplikacji
         function initApp() {
@@ -1913,9 +1351,7 @@
             setupEventListeners();
             loadTransactions();
             loadCategories();
-            loadGoals();
             populateYearFilter();
-            setupTheme();
         }
 
         // Ładowanie transakcji z Firebase
@@ -1957,23 +1393,6 @@
                 renderCategories();
                 updateCategoryOptions();
                 updateHistoryCategoryFilter();
-            });
-        }
-
-        // Ładowanie celów z Firebase
-        function loadGoals() {
-            const goalsRef = database.ref(`users/${userId}/goals`);
-            goalsRef.on('value', (snapshot) => {
-                const data = snapshot.val();
-                if (data) {
-                    goals = Object.keys(data).map(key => ({
-                        id: key,
-                        ...data[key]
-                    }));
-                } else {
-                    goals = [];
-                }
-                renderGoals();
             });
         }
 
@@ -2032,25 +1451,6 @@
             }
         }
 
-        // Zapisywanie celu do Firebase
-        function saveGoal(goal) {
-            const goalsRef = database.ref(`users/${userId}/goals`);
-            if (goal.id) {
-                // Aktualizuj istniejący cel
-                const { id, ...goalData } = goal;
-                goalsRef.child(id).update(goalData);
-            } else {
-                // Dodaj nowy cel
-                const newGoalRef = goalsRef.push();
-                newGoalRef.set({
-                    name: goal.name,
-                    target: goal.target,
-                    current: goal.current,
-                    deadline: goal.deadline
-                });
-            }
-        }
-
         // Usuwanie transakcji z Firebase
         function deleteTransaction(id) {
             const transactionRef = database.ref(`users/${userId}/transactions/${id}`);
@@ -2070,14 +1470,6 @@
             if (confirm('Czy na pewno chcesz usunąć tę kategorię?')) {
                 const categoryRef = database.ref(`users/${userId}/categories/${id}`);
                 categoryRef.remove();
-            }
-        }
-
-        // Usuwanie celu z Firebase
-        function deleteGoal(id) {
-            if (confirm('Czy na pewno chcesz usunąć ten cel?')) {
-                const goalRef = database.ref(`users/${userId}/goals/${id}`);
-                goalRef.remove();
             }
         }
 
@@ -2104,8 +1496,6 @@
                         updateCalendar();
                     } else if (section === 'history') {
                         renderHistory();
-                    } else if (section === 'goals') {
-                        renderGoals();
                     }
                 });
             });
@@ -2170,6 +1560,12 @@
             categoryForm.addEventListener('submit', handleCategorySubmit);
 
             // Historia
+            applyHistoryFilters.addEventListener('click', () => {
+                currentHistoryPage = 1;
+                renderHistory();
+            });
+
+            // Zmiana miesiąca/roku w historii
             historyMonth.addEventListener('change', () => {
                 currentHistoryPage = 1;
                 renderHistory();
@@ -2185,20 +1581,13 @@
                 renderHistory();
             });
 
-            // Motyw
-            themeToggle.addEventListener('click', toggleTheme);
-            themeSelect.addEventListener('change', changeTheme);
-
-            // Cele
-            addGoalBtn?.addEventListener('click', () => openGoalModal());
-            addGoalBtnSection?.addEventListener('click', () => openGoalModal());
-            addGoalButton?.addEventListener('click', () => openGoalModal());
-            closeGoalModalBtn.addEventListener('click', closeGoalModal);
-            cancelGoalBtn.addEventListener('click', closeGoalModal);
-            goalModal.addEventListener('click', (e) => {
-                if (e.target === goalModal) closeGoalModal();
+            // Analytics tabs
+            analyticsTabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    const tabName = tab.getAttribute('data-tab');
+                    switchAnalyticsTab(tabName);
+                });
             });
-            goalForm.addEventListener('submit', handleGoalSubmit);
         }
 
         // Otwórz modal transakcji
@@ -2276,36 +1665,6 @@
             categoryModal.classList.remove('active');
             document.body.style.overflow = 'auto';
             editingCategoryId = null;
-        }
-
-        // Otwórz modal celów
-        function openGoalModal(goal = null) {
-            if (goal) {
-                // Tryb edycji
-                goalModalTitle.textContent = 'Edytuj cel oszczędnościowy';
-                submitGoalBtn.textContent = 'Zapisz zmiany';
-                document.getElementById('goalId').value = goal.id;
-                document.getElementById('goalName').value = goal.name;
-                document.getElementById('goalTarget').value = goal.target;
-                document.getElementById('goalCurrent').value = goal.current;
-                document.getElementById('goalDeadline').value = goal.deadline;
-            } else {
-                // Tryb dodawania
-                goalModalTitle.textContent = 'Dodaj nowy cel oszczędnościowy';
-                submitGoalBtn.textContent = 'Dodaj cel';
-                goalForm.reset();
-                document.getElementById('goalDeadline').value = new Date(new Date().setMonth(new Date().getMonth() + 6)).toISOString().split('T')[0];
-            }
-            
-            goalModal.classList.add('active');
-            document.body.style.overflow = 'hidden';
-        }
-
-        // Zamknij modal celów
-        function closeGoalModal() {
-            goalModal.classList.remove('active');
-            document.body.style.overflow = 'auto';
-            editingGoalId = null;
         }
 
         // Aktualizuj opcje kategorii w formularzu
@@ -2418,28 +1777,6 @@
             closeCategoryModal();
         }
 
-        // Obsługa formularza celów
-        function handleGoalSubmit(e) {
-            e.preventDefault();
-            
-            const name = document.getElementById('goalName').value;
-            const target = parseFloat(document.getElementById('goalTarget').value);
-            const current = parseFloat(document.getElementById('goalCurrent').value);
-            const deadline = document.getElementById('goalDeadline').value;
-            const id = document.getElementById('goalId').value;
-            
-            const goal = {
-                id,
-                name,
-                target,
-                current,
-                deadline
-            };
-            
-            saveGoal(goal);
-            closeGoalModal();
-        }
-
         // Renderuj listę transakcji
         function renderTransactions(filter = 'all') {
             if (transactions.length === 0) {
@@ -2450,7 +1787,7 @@
                         <p>Dodaj swoją pierwszą transakcję, klikając przycisk poniżej</p>
                         <button class="btn btn-primary" id="addFirstTransactionBtn">
                             <i class="fas fa-plus"></i> Dodaj transakcję
-                        </button>
+                                </button>
                     </div>
                 `;
                 document.getElementById('addFirstTransactionBtn')?.addEventListener('click', () => openTransactionModal());
@@ -2627,100 +1964,6 @@
             });
         }
 
-        // Renderuj listę celów
-        function renderGoals() {
-            if (goals.length === 0) {
-                if (goalsList) {
-                    goalsList.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-bullseye"></i>
-                            <h3>Brak celów oszczędnościowych</h3>
-                            <p>Dodaj swój pierwszy cel, klikając przycisk poniżej</p>
-                        </div>
-                        <div class="add-goal-btn" id="addGoalBtnSection">
-                            <i class="fas fa-plus-circle"></i>
-                            <span>Dodaj nowy cel</span>
-                        </div>
-                    `;
-                    document.getElementById('addGoalBtnSection')?.addEventListener('click', () => openGoalModal());
-                }
-                if (savingsGoals) {
-                    savingsGoals.innerHTML = `
-                        <div class="empty-state">
-                            <i class="fas fa-bullseye"></i>
-                            <h3>Brak celów oszczędnościowych</h3>
-                            <p>Dodaj swój pierwszy cel, aby śledzić swoje postępy</p>
-                        </div>
-                        <div class="add-goal-btn" id="addGoalBtn">
-                            <i class="fas fa-plus-circle"></i>
-                            <span>Dodaj nowy cel</span>
-                        </div>
-                    `;
-                    document.getElementById('addGoalBtn')?.addEventListener('click', () => openGoalModal());
-                }
-                return;
-            }
-            
-            let goalsHTML = goals.map(goal => {
-                const progress = (goal.current / goal.target) * 100;
-                return `
-                    <div class="goal-card">
-                        <div class="goal-header">
-                            <div class="goal-title">${goal.name}</div>
-                            <div class="goal-amount">${goal.target.toFixed(2)} zł</div>
-                        </div>
-                        <div class="goal-progress">
-                            <div class="goal-progress-bar">
-                                <div class="goal-progress-fill" style="width: ${progress}%"></div>
-                            </div>
-                            <div class="goal-info">
-                                <span>${goal.current.toFixed(2)} zł</span>
-                                <span>${progress.toFixed(1)}%</span>
-                            </div>
-                        </div>
-                        <div class="goal-actions" style="margin-top: 15px; display: flex; gap: 10px;">
-                            <button class="btn btn-outline btn-sm edit-goal-btn" data-id="${goal.id}">
-                                <i class="fas fa-edit"></i> Edytuj
-                            </button>
-                            <button class="btn btn-danger btn-sm delete-goal-btn" data-id="${goal.id}">
-                                <i class="fas fa-trash"></i> Usuń
-                            </button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-            
-            goalsHTML += `
-                <div class="add-goal-btn" id="addGoalBtnSection">
-                    <i class="fas fa-plus-circle"></i>
-                    <span>Dodaj nowy cel</span>
-                </div>
-            `;
-            
-            if (goalsList) goalsList.innerHTML = goalsHTML;
-            if (savingsGoals) savingsGoals.innerHTML = goalsHTML;
-            
-            // Dodaj event listeners do przycisków edycji i usuwania
-            document.querySelectorAll('.edit-goal-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const id = e.currentTarget.getAttribute('data-id');
-                    const goal = goals.find(g => g.id === id);
-                    if (goal) {
-                        openGoalModal(goal);
-                    }
-                });
-            });
-            
-            document.querySelectorAll('.delete-goal-btn').forEach(btn => {
-                btn.addEventListener('click', (e) => {
-                    const id = e.currentTarget.getAttribute('data-id');
-                    deleteGoal(id);
-                });
-            });
-            
-            document.getElementById('addGoalBtnSection')?.addEventListener('click', () => openGoalModal());
-        }
-
         // Renderuj historię transakcji
         function renderHistory() {
             if (transactions.length === 0) {
@@ -2878,7 +2121,6 @@
             const data = {
                 transactions: transactions,
                 categories: categories,
-                goals: goals,
                 exportDate: new Date().toISOString()
             };
             
@@ -2918,11 +2160,9 @@
                             // Usuń wszystkie istniejące dane
                             const transactionsRef = database.ref(`users/${userId}/transactions`);
                             const categoriesRef = database.ref(`users/${userId}/categories`);
-                            const goalsRef = database.ref(`users/${userId}/goals`);
                             
                             transactionsRef.remove();
                             categoriesRef.remove();
-                            goalsRef.remove();
                             
                             // Dodaj zaimportowane transakcje
                             data.transactions.forEach(transaction => {
@@ -2935,14 +2175,6 @@
                                 const { id, ...categoryData } = category;
                                 categoriesRef.push(categoryData);
                             });
-                            
-                            // Dodaj zaimportowane cele (jeśli istnieją)
-                            if (data.goals) {
-                                data.goals.forEach(goal => {
-                                    const { id, ...goalData } = goal;
-                                    goalsRef.push(goalData);
-                                });
-                            }
                             
                             alert('Dane zostały zaimportowane pomyślnie!');
                         } else {
@@ -3076,10 +2308,9 @@
             const balanceCtx = document.getElementById('balanceChart').getContext('2d');
             const expensesCtx = document.getElementById('expensesChart').getContext('2d');
             const incomeAnalyticsCtx = document.getElementById('incomeChartAnalytics').getContext('2d');
-            const incomeTrendCtx = document.getElementById('incomeTrendChart').getContext('2d');
-            const expenseTrendCtx = document.getElementById('expenseTrendChart').getContext('2d');
-            const balanceTrendCtx = document.getElementById('balanceTrendChart').getContext('2d');
+            const expensesOverTimeCtx = document.getElementById('expensesOverTimeChart').getContext('2d');
             const trendsCtx = document.getElementById('trendsChart').getContext('2d');
+            const balanceTrendCtx = document.getElementById('balanceTrendChart').getContext('2d');
             
             incomeChart = new Chart(incomeCtx, {
                 type: 'line',
@@ -3195,107 +2426,15 @@
                 }
             });
             
-            incomeTrendChart = new Chart(incomeTrendCtx, {
-                type: 'line',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'Przychody',
-                        data: [],
-                        borderColor: '#4bb543',
-                        backgroundColor: 'rgba(75, 181, 67, 0.1)',
-                        borderWidth: 2,
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                display: false
-                            },
-                            ticks: {
-                                display: false
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            }
-                        }
-                    },
-                    elements: {
-                        point: {
-                            radius: 0
-                        }
-                    }
-                }
-            });
-            
-            expenseTrendChart = new Chart(expenseTrendCtx, {
-                type: 'line',
+            expensesOverTimeChart = new Chart(expensesOverTimeCtx, {
+                type: 'bar',
                 data: {
                     labels: [],
                     datasets: [{
                         label: 'Wydatki',
                         data: [],
+                        backgroundColor: '#ff3333',
                         borderColor: '#ff3333',
-                        backgroundColor: 'rgba(255, 51, 51, 0.1)',
-                        borderWidth: 2,
-                        tension: 0.4,
-                        fill: true
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: {
-                            display: false
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            grid: {
-                                display: false
-                            },
-                            ticks: {
-                                display: false
-                            }
-                        },
-                        x: {
-                            grid: {
-                                display: false
-                            }
-                        }
-                    },
-                    elements: {
-                        point: {
-                            radius: 0
-                        }
-                    }
-                }
-            });
-            
-            balanceTrendChart = new Chart(balanceTrendCtx, {
-                type: 'bar',
-                data: {
-                    labels: [],
-                    datasets: [{
-                        label: 'Saldo',
-                        data: [],
-                        backgroundColor: '#4cc9f0',
-                        borderColor: '#4cc9f0',
                         borderWidth: 0,
                         borderRadius: 4
                     }]
@@ -3347,6 +2486,35 @@
                     plugins: {
                         legend: {
                             position: 'top'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+            
+            balanceTrendChart = new Chart(balanceTrendCtx, {
+                type: 'bar',
+                data: {
+                    labels: [],
+                    datasets: [{
+                        label: 'Saldo',
+                        data: [],
+                        backgroundColor: '#4cc9f0',
+                        borderColor: '#4cc9f0',
+                        borderWidth: 0,
+                        borderRadius: 4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false
                         }
                     },
                     scales: {
@@ -3419,9 +2587,38 @@
             
             // Aktualizacja statystyk
             const totalExpenses = amounts.reduce((sum, amount) => sum + amount, 0);
-            document.getElementById('totalExpenses').textContent = totalExpenses.toFixed(2) + ' zł';
+            const avgExpenses = totalExpenses / (expenseTransactions.length > 0 ? expenseTransactions.length : 1);
+            const largestExpense = Math.max(...amounts, 0);
             
-            // Trendy wydatków (ostatnie 6 miesięcy)
+            document.getElementById('totalExpenses').textContent = totalExpenses.toFixed(2) + ' zł';
+            document.getElementById('avgExpenses').textContent = avgExpenses.toFixed(2) + ' zł';
+            document.getElementById('largestExpense').textContent = largestExpense.toFixed(2) + ' zł';
+            
+            // Top 5 kategorii wydatków
+            const topExpenses = categoryIds
+                .map(id => ({ id, amount: expenseCategories[id] }))
+                .sort((a, b) => b.amount - a.amount)
+                .slice(0, 5);
+            
+            const topExpensesHTML = topExpenses.map(expense => {
+                const category = categories.find(c => c.id === expense.id);
+                const percentage = (expense.amount / totalExpenses * 100).toFixed(1);
+                return `
+                    <div style="margin-bottom: 10px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span>${category ? category.name : expense.id}</span>
+                            <span>${expense.amount.toFixed(2)} zł (${percentage}%)</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${percentage}%; background-color: ${category ? category.color : '#4361ee'};"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            document.getElementById('topExpensesList').innerHTML = topExpensesHTML || '<p>Brak danych</p>';
+            
+            // Wydatki w czasie (ostatnie 6 miesięcy)
             const months = [];
             const expensesOverTimeData = [];
             
@@ -3444,9 +2641,9 @@
                 expensesOverTimeData.push(monthExpense);
             }
             
-            expenseTrendChart.data.labels = months;
-            expenseTrendChart.data.datasets[0].data = expensesOverTimeData;
-            expenseTrendChart.update();
+            expensesOverTimeChart.data.labels = months;
+            expensesOverTimeChart.data.datasets[0].data = expensesOverTimeData;
+            expensesOverTimeChart.update();
         }
 
         // Aktualizuj analitykę przychodów
@@ -3486,34 +2683,36 @@
             
             // Aktualizacja statystyk
             const totalIncome = amounts.reduce((sum, amount) => sum + amount, 0);
+            const avgIncome = totalIncome / (incomeTransactions.length > 0 ? incomeTransactions.length : 1);
+            const largestIncome = Math.max(...amounts, 0);
+            
             document.getElementById('totalIncome').textContent = totalIncome.toFixed(2) + ' zł';
+            document.getElementById('avgIncome').textContent = avgIncome.toFixed(2) + ' zł';
+            document.getElementById('largestIncome').textContent = largestIncome.toFixed(2) + ' zł';
             
-            // Trendy przychodów (ostatnie 6 miesięcy)
-            const months = [];
-            const incomeOverTimeData = [];
+            // Top 5 kategorii przychodów
+            const topIncome = categoryIds
+                .map(id => ({ id, amount: incomeCategories[id] }))
+                .sort((a, b) => b.amount - a.amount)
+                .slice(0, 5);
             
-            for (let i = 5; i >= 0; i--) {
-                const date = new Date();
-                date.setMonth(date.getMonth() - i);
-                const month = date.getMonth();
-                const year = date.getFullYear();
-                
-                months.push(getMonthName(month));
-                
-                const monthIncome = incomeTransactions
-                    .filter(t => {
-                        const transactionDate = new Date(t.date);
-                        return transactionDate.getMonth() === month && 
-                               transactionDate.getFullYear() === year;
-                    })
-                    .reduce((sum, t) => sum + t.amount, 0);
-                
-                incomeOverTimeData.push(monthIncome);
-            }
+            const topIncomeHTML = topIncome.map(income => {
+                const category = categories.find(c => c.id === income.id);
+                const percentage = (income.amount / totalIncome * 100).toFixed(1);
+                return `
+                    <div style="margin-bottom: 10px;">
+                        <div style="display: flex; justify-content: space-between; margin-bottom: 5px;">
+                            <span>${category ? category.name : income.id}</span>
+                            <span>${income.amount.toFixed(2)} zł (${percentage}%)</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${percentage}%; background-color: ${category ? category.color : '#4361ee'};"></div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
             
-            incomeTrendChart.data.labels = months;
-            incomeTrendChart.data.datasets[0].data = incomeOverTimeData;
-            incomeTrendChart.update();
+            document.getElementById('topIncomeList').innerHTML = topIncomeHTML || '<p>Brak danych</p>';
         }
 
         // Aktualizuj analitykę trendów
@@ -3560,9 +2759,53 @@
             balanceTrendChart.data.datasets[0].data = balanceData;
             balanceTrendChart.update();
             
-            // Oblicz średnie miesięczne saldo
-            const avgBalance = balanceData.reduce((sum, amount) => sum + amount, 0) / balanceData.length;
-            document.getElementById('avgBalance').textContent = avgBalance.toFixed(2) + ' zł';
+            // Oblicz statystyki udziału wydatków
+            const totalIncome = incomeData.reduce((sum, amount) => sum + amount, 0);
+            const totalExpenses = expenseData.reduce((sum, amount) => sum + amount, 0);
+            const expenseRatio = totalIncome > 0 ? (totalExpenses / totalIncome * 100).toFixed(1) : 0;
+            
+            document.getElementById('expenseRatioStats').innerHTML = `
+                <div class="stat-card">
+                    <div class="stat-value">${expenseRatio}%</div>
+                    <div class="stat-label">Udział wydatków w przychodach</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">${(100 - expenseRatio).toFixed(1)}%</div>
+                    <div class="stat-label">Wskaźnik oszczędności</div>
+                </div>
+            `;
+        }
+
+        // Przełącz zakładki w analityce
+        function switchAnalyticsTab(tabName) {
+            currentAnalyticsTab = tabName;
+            
+            // Aktualizuj aktywne zakładki
+            analyticsTabs.forEach(tab => {
+                if (tab.getAttribute('data-tab') === tabName) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+            
+            // Aktualizuj aktywne treści
+            analyticsTabContents.forEach(content => {
+                if (content.id === `${tabName}-tab`) {
+                    content.classList.add('active');
+                } else {
+                    content.classList.remove('active');
+                }
+            });
+            
+            // Jeśli potrzeba, zaktualizuj dane
+            if (tabName === 'expenses') {
+                updateExpensesAnalytics();
+            } else if (tabName === 'income') {
+                updateIncomeAnalytics();
+            } else if (tabName === 'trends') {
+                updateTrendsAnalytics();
+            }
         }
 
         // Aktualizuj kalendarz
@@ -3645,46 +2888,6 @@
             }
         }
 
-        // Zarządzanie motywem
-        function setupTheme() {
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            if (savedTheme === 'dark') {
-                document.body.classList.add('dark-theme');
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-            } else {
-                document.body.classList.remove('dark-theme');
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-            }
-            themeSelect.value = savedTheme;
-        }
-
-        function toggleTheme() {
-            if (document.body.classList.contains('dark-theme')) {
-                document.body.classList.remove('dark-theme');
-                localStorage.setItem('theme', 'light');
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-                themeSelect.value = 'light';
-            } else {
-                document.body.classList.add('dark-theme');
-                localStorage.setItem('theme', 'dark');
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-                themeSelect.value = 'dark';
-            }
-        }
-
-        function changeTheme() {
-            const theme = themeSelect.value;
-            if (theme === 'dark') {
-                document.body.classList.add('dark-theme');
-                localStorage.setItem('theme', 'dark');
-                themeToggle.innerHTML = '<i class="fas fa-sun"></i>';
-            } else {
-                document.body.classList.remove('dark-theme');
-                localStorage.setItem('theme', 'light');
-                themeToggle.innerHTML = '<i class="fas fa-moon"></i>';
-            }
-        }
-
         // Pomocnicze funkcje
         function getCategoryIcon(categoryId) {
             const category = categories.find(c => c.id === categoryId);
@@ -3754,10 +2957,8 @@
             };
         }
 
-        document.addEventListener('DOMContentLoaded', function() {
-            // Tutaj kod inicjalizujący aplikację
-            initApp();
-        });
+        // Inicjalizacja aplikacji
+        initApp();
     </script>
 </body>
 </html>
