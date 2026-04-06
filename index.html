@@ -216,26 +216,6 @@
 
     <!-- GALERIA – 3 KOLUMNY, KWADRATOWE ZDJĘCIA -->
     <div class="gallery" id="galleryContainer">
-        <!-- 
-            📸 JAK DODAWAĆ ZDJĘCIA (folder "images"):
-            
-            1. Utwórz folder "images" obok pliku index.html
-            2. Wrzuć swoje zdjęcia (WAŻNE: wrzuć je w ORYGINALNEJ, DUŻEJ ROZDZIELCZOŚCI)
-            3. Dla każdego zdjęcia wklej:
-            
-               <div class="photo-card" data-full="images/nazwa_pliku.jpg">
-                   <img src="images/nazwa_pliku.jpg" alt="" loading="lazy">
-               </div>
-            
-            ✔️ Zdjęcia są wyświetlane jako kwadraty (1:1) w galerii
-            ✔️ Po kliknięciu – lightbox pokazuje zdjęcie w ORYGINALNYM rozmiarze
-            ✔️ Na szerokim ekranie 3 kolumny, na tabletach 2, na telefonach 1
-            ✔️ Zdjęcia są duże i wypełniają przestrzeń
-        -->
-
-        <!-- PRZYKŁADOWE ZDJĘCIA (zastąp własnymi ścieżkami z folderu images/)
-             Uwaga: używam Unsplash z kwadratowym przycięciem dla przykładu,
-             ale w Twoim przypadku data-full wskazuje na ORYGINALNY plik -->
         
         <div class="photo-card" data-full="https://lh3.googleusercontent.com/pw/AP1GczMmuN4ckuE69eNhGbqDqSn7fkYjp-5i5cOZG7O_0IsXRue_2cWAnxTxoeRp-dWEJ4TnFt-HQ-X06-rKSGH0b_6DQSVNBIoxCnfeNS603Fa2dWQid6Ouv_U24xgGevzYqVSlK9m7B9T14Yx0GYWhCswqH2fRUOZ_cJxgdHYvbveyeNpYKzSanCPzVNn8dD3EnmP8FDoJGzNy1DE3_M0D-Pe5_C7f75UoCN-QX5XEpbtZdZ4N94uAL6Feq1ALROLPByYtS2Emp2Du8CucwHSgoog2mZSqg20-jbsOchnIsvfuNAYr2LIVdJKC592CReGfGwHQfZ4eE3qghB3ubysYI-7232fKTjm14GqIQYGncLrN5UFeoMSipOwDaJyz1EBT5PBTqEHs4UFuw98iDNWpXcBlkv_FRmyWk9E3CLBL7Ooqx2Z_iD2ekCkhQ9mDB5fNqLURfqopLBNS-EUoOVWyw-cGSkmXMqStR4HS0TzBF6fxHrEOFJUAdlHMhH4fn9fwHHVMxSUu3cYsLaHWfY9ypAssW44S64TwgafsW1j7HJlqO7mf5vtdoA_SYpkSJWXwhpyqt69pNn8PUs7-CBcnsoGkPlM72DCVED9gjpC02G89wtOQBjUrbqkuYJ9t_RciXyTIDDLyzy0n76EQEplAub95ZDKzma6J2rBQ5CgG5C517s3Yx_CmJplMUFXk8-EcOYLhMEEB7Al1zSHyEXZ-mVFwUeBZKk7Sthj9Lts325ud1GI7b31o3_sQ9AMd62Lwd2vudJogSY8cKz_X8fuImOJGkaxjS0RJNR5jKfdR0wMRs12Izzoj1svAYe7iKmebzXllcvnQr05VS0tw3u4FiwPK75u_6QhtH5paeJO5H_IGKg5HRAerF6TaM5IKNMEM07tVL4nqpz36aRHG6TpnA9Bu4qqtCnwhZ7qGqhmpngYYOAwk9zMtczqyeYGoZjM3vztoUBVYnduXMY2AsGtezw5Cn4teT08Jk_QxmYteLoePBSJBhqUrOM-NKzzg=w889-h1335-s-no?authuser=2">
             <img src="https://lh3.googleusercontent.com/pw/AP1GczMmuN4ckuE69eNhGbqDqSn7fkYjp-5i5cOZG7O_0IsXRue_2cWAnxTxoeRp-dWEJ4TnFt-HQ-X06-rKSGH0b_6DQSVNBIoxCnfeNS603Fa2dWQid6Ouv_U24xgGevzYqVSlK9m7B9T14Yx0GYWhCswqH2fRUOZ_cJxgdHYvbveyeNpYKzSanCPzVNn8dD3EnmP8FDoJGzNy1DE3_M0D-Pe5_C7f75UoCN-QX5XEpbtZdZ4N94uAL6Feq1ALROLPByYtS2Emp2Du8CucwHSgoog2mZSqg20-jbsOchnIsvfuNAYr2LIVdJKC592CReGfGwHQfZ4eE3qghB3ubysYI-7232fKTjm14GqIQYGncLrN5UFeoMSipOwDaJyz1EBT5PBTqEHs4UFuw98iDNWpXcBlkv_FRmyWk9E3CLBL7Ooqx2Z_iD2ekCkhQ9mDB5fNqLURfqopLBNS-EUoOVWyw-cGSkmXMqStR4HS0TzBF6fxHrEOFJUAdlHMhH4fn9fwHHVMxSUu3cYsLaHWfY9ypAssW44S64TwgafsW1j7HJlqO7mf5vtdoA_SYpkSJWXwhpyqt69pNn8PUs7-CBcnsoGkPlM72DCVED9gjpC02G89wtOQBjUrbqkuYJ9t_RciXyTIDDLyzy0n76EQEplAub95ZDKzma6J2rBQ5CgG5C517s3Yx_CmJplMUFXk8-EcOYLhMEEB7Al1zSHyEXZ-mVFwUeBZKk7Sthj9Lts325ud1GI7b31o3_sQ9AMd62Lwd2vudJogSY8cKz_X8fuImOJGkaxjS0RJNR5jKfdR0wMRs12Izzoj1svAYe7iKmebzXllcvnQr05VS0tw3u4FiwPK75u_6QhtH5paeJO5H_IGKg5HRAerF6TaM5IKNMEM07tVL4nqpz36aRHG6TpnA9Bu4qqtCnwhZ7qGqhmpngYYOAwk9zMtczqyeYGoZjM3vztoUBVYnduXMY2AsGtezw5Cn4teT08Jk_QxmYteLoePBSJBhqUrOM-NKzzg=w889-h1335-s-no?authuser=2" alt="" loading="lazy">
@@ -284,8 +264,20 @@
     </div>
 
     <footer class="site-footer">
-        <div class="footer-text">@ XEONZI</div>
-        <div class="footer-copyright">© 2025</div>
+        <div class="footer-content">
+            <div class="footer-item">
+                <i class="fab fa-discord"></i>
+                <a href="#" target="_blank">@marta.lens</a>
+            </div>
+            <div class="footer-item">
+                <i class="fas fa-camera"></i>
+                <span>Sony A7III · 35mm f/1.4</span>
+            </div>
+            <div class="footer-item">
+                <i class="far fa-copyright"></i>
+                <span>2025 Marta Lens</span>
+            </div>
+        </div>
     </footer>
 </div>
 
@@ -346,53 +338,7 @@
                 closeLightbox();
             }
         });
-
-        console.log('✅ 3 kolumny, kwadratowe zdjęcia, lightbox z oryginalnym rozmiarem');
     })();
 </script>
-
-<!-- 
-    ✨ CO OTRZYMUJESZ:
-    
-    📐 UKŁAD:
-    - 3 równe kolumny na szerokim ekranie (powyżej 800px)
-    - 2 kolumny na tabletach (550-800px)
-    - 1 kolumna na telefonach (poniżej 550px)
-    - Duże odstępy między zdjęciami (gap: 1.8rem)
-    
-    🟦 ZDJĘCIA:
-    - KWADRATOWE (aspect-ratio: 1/1)
-    - object-fit: cover – zdjęcia wypełniają cały kwadrat
-    - Maksymalne wypełnienie przestrzeni
-    
-    🔍 LIGHTBOX:
-    - Po kliknięciu wyświetla zdjęcie w ORYGINALNYM rozmiarze
-    - Nie modyfikuje URL – ładuje dokładnie to, co wskazuje data-full
-    - Przyciemnione, rozmyte tło
-    
-    🎨 STOPKA:
-    - Większa, bardziej wyrazista
-    - Dwie linie tekstu
-    
-    ⚖️ LOGO:
-    - Idealnie wyśrodkowane, duży odstęp od zdjęć
-    
-    📸 JAK DODAĆ WŁASNE ZDJĘCIA:
-    1. Stwórz folder "images"
-    2. Wrzuć swoje zdjęcia w ORYGINALNEJ, DUŻEJ ROZDZIELCZOŚCI (np. 2000x2000px lub więcej)
-    3. Dla każdego zdjęcia dodaj:
-       <div class="photo-card" data-full="images/twoj_plik.jpg">
-           <img src="images/twoj_plik.jpg" alt="" loading="lazy">
-       </div>
-    
-    💡 WSKAZÓWKA:
-    - Możesz użyć tego samego pliku w src i data-full – wtedy miniatura będzie taka sama jak oryginał
-    - Dla lepszej wydajności możesz stworzyć mniejsze wersje do galerii (np. 800x800px),
-      a w data-full wskazać oryginalny plik w pełnej rozdzielczości
-    - Przykład: 
-      <div class="photo-card" data-full="images/oryginal_2000px.jpg">
-          <img src="images/miniatura_800px.jpg" alt="" loading="lazy">
-      </div>
--->
 </body>
 </html>
