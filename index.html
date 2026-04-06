@@ -22,7 +22,6 @@
             height: 100vh;
         }
 
-        /* główny kontener */
         .time-machine {
             position: relative;
             width: 100%;
@@ -39,7 +38,6 @@
             justify-content: center;
         }
 
-        /* karta */
         .card {
             position: absolute;
             width: 85%;
@@ -50,8 +48,8 @@
             overflow: hidden;
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
             cursor: pointer;
-            transition: transform 0.85s cubic-bezier(0.2, 0.95, 0.4, 1.05);
-            will-change: transform;
+            transition: transform 0.55s cubic-bezier(0.2, 0.95, 0.4, 1.05), opacity 0.3s ease;
+            will-change: transform, opacity;
         }
         .card img {
             width: 100%;
@@ -61,7 +59,7 @@
             pointer-events: none;
         }
 
-        /* lightbox */
+        /* LIGHTBOX */
         .lightbox {
             display: none;
             position: fixed;
@@ -100,21 +98,26 @@
             opacity: 1;
         }
 
-        /* info o sterowaniu */
-        .info {
+        /* informacja dla użytkownika – idealnie wyśrodkowana */
+        .info-message {
             position: fixed;
-            bottom: 2rem;
-            left: 0;
-            right: 0;
+            bottom: 5rem;
+            left: 50%;
+            transform: translateX(-50%);
             text-align: center;
-            font-size: 0.9rem;
-            color: rgba(255,255,255,0.4);
+            font-size: 0.7rem;
+            color: rgba(255,255,255,0.5);
             letter-spacing: 1px;
             z-index: 100;
             pointer-events: none;
+            font-family: 'Space Mono', monospace;
+            background: rgba(0,0,0,0.4);
+            backdrop-filter: blur(4px);
+            padding: 0.5rem 1.2rem;
+            border-radius: 40px;
+            white-space: nowrap;
         }
 
-        /* stopka */
         .footer {
             position: fixed;
             bottom: 0;
@@ -122,7 +125,7 @@
             right: 0;
             text-align: center;
             padding: 1rem;
-            font-size: 0.9rem;
+            font-size: 0.7rem;
             color: rgba(255,255,255,0.4);
             background: transparent;
             z-index: 100;
@@ -141,9 +144,10 @@
 
         @media (max-width: 800px) {
             .card { width: 90%; }
+            .info-message { font-size: 0.6rem; bottom: 4rem; padding: 0.4rem 1rem; white-space: nowrap; }
         }
         @media (max-width: 550px) {
-            .info { bottom: 1.5rem; font-size: 0.6rem; }
+            .info-message { font-size: 0.55rem; bottom: 4rem; padding: 0.4rem 0.8rem; white-space: nowrap; }
             .footer { padding: 0.8rem; gap: 1rem; }
             .close-lightbox { top: 1rem; right: 1rem; font-size: 1.5rem; }
         }
@@ -155,8 +159,8 @@
     <div class="cards-stack" id="cardsStack"></div>
 </div>
 
-<div class="info">
-    <i class="fas fa-mouse-pointer"></i> scroll · strzałki ← →
+<div class="info-message">
+    <i class="fas fa-mouse-pointer"></i> scroll / strzałki ← → &nbsp;&nbsp;|&nbsp;&nbsp; <i class="fas fa-expand"></i> kliknij na zdjęcie
 </div>
 
 <div class="footer">
@@ -164,7 +168,6 @@
     <span><i class="fas fa-camera"></i> Sony A58 · 18-55mm</span>
 </div>
 
-<!-- Lightbox -->
 <div id="lightbox" class="lightbox">
     <span class="close-lightbox">&times;</span>
     <img class="lightbox-img" id="lightbox-img" src="" alt="">
@@ -172,21 +175,33 @@
 
 <script>
     (function() {
-        // ========== ZDJĘCIA – DODAJ SWOJE ==========
-        const IMAGES = [
-            "https://res.cloudinary.com/dby9omfqg/image/upload/v1775504057/DSC05612_gnfyaq.jpg",
-            "https://8upload.com/image/5727d9210ce23584/DSC05610.jpg",
-            "https://8upload.com/image/d72e595d65bc2015/DSC05612.jpg",
-            "https://8upload.com/image/a07611521458f1d2/DSC05616.jpg",
-            "https://8upload.com/image/32d8dba3a2c5ce86/DSC05628.jpg",
-            "https://8upload.com/image/6873f4ed94bb7b39/DSC05629.jpg",
-            "https://8upload.com/image/9cf1c307481eb0c5/DSC05631.jpg",
-            "https://8upload.com/image/e75da450fe221346/DSC05650.jpeg",
-            "https://8upload.com/image/e77792e1a88ee35a/DSC05653.jpeg",
-            "https://8upload.com/image/24d1e3a8d2d82b69/DSC05576.jpg"
+        // ========== ZDJĘCIA – LOSOWANIE KOLEJNOŚCI ==========
+        const rawImages = [
+            "https://ik.imagekit.io/y5xibwdltl/DSC05653.jpeg",
+            "https://ik.imagekit.io/y5xibwdltl/DSC05552-2.jpg",
+            "https://ik.imagekit.io/y5xibwdltl/DSC05576.jpg",
+            "https://ik.imagekit.io/y5xibwdltl/DSC05628.jpg",
+            "https://ik.imagekit.io/y5xibwdltl/DSC05616.jpg",
+            "https://ik.imagekit.io/y5xibwdltl/DSC05650.jpeg",
+            "https://ik.imagekit.io/y5xibwdltl/DSC05629.jpg",
+            "https://ik.imagekit.io/y5xibwdltl/DSC05631.jpg",
+            "https://ik.imagekit.io/y5xibwdltl/DSC05549.jpg",
+            "https://ik.imagekit.io/y5xibwdltl/DSC05612.jpg",
+            "https://ik.imagekit.io/y5xibwdltl/DSC05606.jpg",
+            "https://ik.imagekit.io/y5xibwdltl/DSC05610.jpg"
         ];
 
-        // ===== PARAMETRY =====
+        // LOSOWANIE KOLEJNOŚCI ZDJĘĆ
+        function shuffleArray(arr) {
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        const IMAGES = shuffleArray([...rawImages]);
+
         let currentIndex = 0;
         const VISIBLE_BACK_CARDS = 3;
         const Y_OFFSET = -14;
@@ -199,7 +214,6 @@
         const container = document.getElementById('timeMachine');
         const stack = document.getElementById('cardsStack');
         
-        // lightbox
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
         const closeBtn = document.querySelector('.close-lightbox');
@@ -237,9 +251,7 @@
                 card.className = 'card';
                 card.style.transform = `translateY(${y}px) scale(${scale})`;
                 card.style.zIndex = zIndex;
-                card.style.transition = 'transform 0.85s cubic-bezier(0.2, 0.95, 0.4, 1.05)';
                 
-                card.setAttribute('data-src', imgSrc);
                 card.innerHTML = `<img src="${imgSrc}" alt="" loading="lazy">`;
                 
                 card.addEventListener('click', (e) => {
@@ -256,7 +268,7 @@
             isAnimating = true;
             currentIndex++;
             updateCards();
-            setTimeout(() => { isAnimating = false; }, 900);
+            setTimeout(() => { isAnimating = false; }, 600);
         }
 
         function prevCard() {
@@ -264,12 +276,11 @@
             isAnimating = true;
             currentIndex--;
             updateCards();
-            setTimeout(() => { isAnimating = false; }, 900);
+            setTimeout(() => { isAnimating = false; }, 600);
         }
 
-        // ========== OBSŁUGA SCROLLA ==========
-        const SCROLL_THRESHOLD = 35;
-        const MIN_UPDATE_INTERVAL = 100;
+        const SCROLL_THRESHOLD = 40;
+        const MIN_UPDATE_INTERVAL = 75;
 
         function handleWheel(e) {
             e.preventDefault();
@@ -286,7 +297,6 @@
             }
         }
         
-        // ========== OBSŁUGA STRZAŁEK ==========
         function onKeyDown(e) {
             if (isAnimating) return;
             if (e.key === 'ArrowRight') { nextCard(); e.preventDefault(); }
@@ -294,19 +304,16 @@
             else if (e.key === 'Escape' && lightbox.classList.contains('active')) { closeLightbox(); }
         }
         
-        // ========== LIGHTBOX ==========
+        container.addEventListener('wheel', handleWheel, { passive: false });
+        document.addEventListener('keydown', onKeyDown);
+        
         lightbox.addEventListener('click', (e) => {
             if (e.target === lightbox || e.target === closeBtn) closeLightbox();
         });
         
-        // ========== REJESTRACJA EVENTÓW ==========
-        container.addEventListener('wheel', handleWheel, { passive: false });
-        document.addEventListener('keydown', onKeyDown);
-        
-        // start
         updateCards();
         
-        console.log('Time Machine – płynna animacja 0.85s, logo usunięte, lightbox działa!');
+        console.log('Time Machine – instrukcja wyśrodkowana, losowa kolejność zdjęć!');
     })();
 </script>
 </body>
