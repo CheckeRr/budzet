@@ -11,55 +11,123 @@
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            user-select: none;
         }
 
         body {
             font-family: 'Space Mono', monospace;
-            background: #000000;
-            color: #f0f0f0;
-            overflow: hidden;
-            height: 100vh;
-        }
-
-        .time-machine {
-            position: relative;
-            width: 100%;
-            height: 100vh;
-            overflow: hidden;
-        }
-
-        .cards-stack {
-            position: relative;
-            width: 100%;
-            height: 100%;
+            background-color: #fefaf5;
+            color: #2c241a;
+            min-height: 100vh;
             display: flex;
-            align-items: center;
-            justify-content: center;
+            flex-direction: column;
         }
 
-        .card {
-            position: absolute;
-            width: 85%;
-            max-width: 800px;
-            aspect-ratio: 16 / 9;
-            background: #000000;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8);
-            cursor: pointer;
-            transition: transform 0.55s cubic-bezier(0.2, 0.95, 0.4, 1.05), opacity 0.3s ease;
-            will-change: transform, opacity;
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            flex: 1;
         }
-        .card img {
+
+        .site-header {
+            text-align: center;
+            padding: 4rem 0 5rem 0;
+        }
+
+        .logo {
+            font-size: 3rem;
+            font-weight: 700;
+            letter-spacing: -1px;
+            color: #2c241a;
+            text-decoration: none;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1.8rem;
+            margin-bottom: 4rem;
+        }
+
+        .photo-card {
+            cursor: pointer;
+            overflow: hidden;
+            background: #f0ede5;
+            aspect-ratio: 1 / 1;
+            position: relative;
+            border-radius: 4px;
+            
+            /* Animacja pojawiania się */
+            opacity: 0;
+            transform: translateY(20px);
+            animation: fadeInUp 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1) forwards;
+        }
+
+        .photo-card:nth-child(1) { animation-delay: 0.05s; }
+        .photo-card:nth-child(2) { animation-delay: 0.1s; }
+        .photo-card:nth-child(3) { animation-delay: 0.15s; }
+        .photo-card:nth-child(4) { animation-delay: 0.2s; }
+        .photo-card:nth-child(5) { animation-delay: 0.25s; }
+        .photo-card:nth-child(6) { animation-delay: 0.3s; }
+        .photo-card:nth-child(7) { animation-delay: 0.35s; }
+        .photo-card:nth-child(8) { animation-delay: 0.4s; }
+        .photo-card:nth-child(9) { animation-delay: 0.45s; }
+
+        @keyframes fadeInUp {
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* NOWA ANIMACJA PO NAJECHANIU – delikatne przyciemnienie + glow */
+        .photo-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            object-fit: cover;
-            display: block;
+            background: rgba(0, 0, 0, 0);
+            transition: background 0.35s ease;
+            z-index: 1;
             pointer-events: none;
         }
 
-        /* LIGHTBOX */
+        .photo-card::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            box-shadow: inset 0 0 0 0 rgba(255, 255, 255, 0);
+            transition: box-shadow 0.4s ease;
+            z-index: 1;
+            pointer-events: none;
+            border-radius: 4px;
+        }
+
+        .photo-card:hover::before {
+            background: rgba(0, 0, 0, 0.08);
+        }
+
+        .photo-card:hover::after {
+            box-shadow: inset 0 0 0 2px rgba(255, 255, 255, 0.3), inset 0 0 15px 2px rgba(255, 255, 255, 0.2);
+        }
+
+        .photo-card img {
+            width: 100%;
+            height: 100%;
+            display: block;
+            object-fit: cover;
+            transition: transform 0.5s cubic-bezier(0.2, 0.9, 0.4, 1.1);
+        }
+
+        .photo-card:hover img {
+            transform: scale(1.03);
+        }
+
         .lightbox {
             display: none;
             position: fixed;
@@ -67,105 +135,167 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.95);
-            backdrop-filter: blur(15px);
-            z-index: 1000;
+            background-color: rgba(255, 250, 245, 0.97);
+            backdrop-filter: blur(12px);
+            z-index: 1100;
             justify-content: center;
             align-items: center;
             cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s ease;
         }
+
         .lightbox.active {
             display: flex;
+            opacity: 1;
         }
+
         .lightbox-img {
-            max-width: 85vw;
-            max-height: 85vh;
+            max-width: 88vw;
+            max-height: 88vh;
+            width: auto;
+            height: auto;
             object-fit: contain;
             border-radius: 8px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+            box-shadow: 0 20px 35px rgba(0,0,0,0.1);
+            animation: zoomIn 0.25s ease;
         }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.96);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
         .close-lightbox {
             position: absolute;
-            top: 2rem;
+            top: 1.8rem;
             right: 2rem;
             font-size: 2rem;
-            color: white;
+            color: #2c241a;
             cursor: pointer;
-            opacity: 0.7;
+            opacity: 0.5;
             transition: opacity 0.2s;
         }
+
         .close-lightbox:hover {
             opacity: 1;
         }
 
-        /* informacja dla użytkownika – idealnie wyśrodkowana */
-        .info-message {
-            position: fixed;
-            bottom: 5rem;
-            left: 50%;
-            transform: translateX(-50%);
+        .site-footer {
             text-align: center;
-            font-size: 0.7rem;
-            color: rgba(255,255,255,0.5);
-            letter-spacing: 1px;
-            z-index: 100;
-            pointer-events: none;
-            font-family: 'Space Mono', monospace;
-            background: rgba(0,0,0,0.4);
-            backdrop-filter: blur(4px);
-            padding: 0.5rem 1.2rem;
-            border-radius: 40px;
-            white-space: nowrap;
+            padding: 2rem 0 3rem 0;
         }
 
-        .footer {
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            text-align: center;
-            padding: 1rem;
-            font-size: 0.7rem;
-            color: rgba(255,255,255,0.4);
-            background: transparent;
-            z-index: 100;
+        .footer-content {
             display: flex;
+            flex-wrap: wrap;
             justify-content: center;
-            gap: 1.5rem;
-        }
-        .footer a {
-            color: rgba(255,255,255,0.5);
-            text-decoration: none;
-            transition: color 0.2s;
-        }
-        .footer a:hover {
-            color: white;
+            align-items: center;
+            gap: 2rem;
+            font-size: 0.8rem;
+            color: #7a6a5a;
         }
 
-        @media (max-width: 800px) {
-            .card { width: 90%; }
-            .info-message { font-size: 0.6rem; bottom: 4rem; padding: 0.4rem 1rem; white-space: nowrap; }
+        .footer-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.6rem;
         }
+
+        .footer-item a {
+            color: #7a6a5a;
+            text-decoration: none;
+        }
+
+        .footer-item a:hover {
+            color: #2c241a;
+        }
+
+        @media (max-width: 900px) {
+            .container { padding: 0 1.5rem; }
+            .logo { font-size: 2.5rem; }
+            .site-header { padding: 3rem 0 4rem 0; }
+            .gallery { gap: 1.2rem; }
+        }
+
+        @media (max-width: 750px) {
+            .gallery { grid-template-columns: repeat(2, 1fr); gap: 1rem; }
+        }
+
         @media (max-width: 550px) {
-            .info-message { font-size: 0.55rem; bottom: 4rem; padding: 0.4rem 0.8rem; white-space: nowrap; }
-            .footer { padding: 0.8rem; gap: 1rem; }
-            .close-lightbox { top: 1rem; right: 1rem; font-size: 1.5rem; }
+            .container { padding: 0 1rem; }
+            .logo { font-size: 2rem; }
+            .site-header { padding: 2rem 0 3rem 0; }
+            .gallery { grid-template-columns: 1fr; }
+            .footer-content { gap: 1rem; flex-direction: column; }
         }
     </style>
 </head>
 <body>
 
-<div class="time-machine" id="timeMachine">
-    <div class="cards-stack" id="cardsStack"></div>
-</div>
+<div class="container">
+    <header class="site-header">
+        <div class="logo">@xeonzi</div>
+    </header>
 
-<div class="info-message">
-    <i class="fas fa-mouse-pointer"></i> scroll / strzałki ← → &nbsp;&nbsp;|&nbsp;&nbsp; <i class="fas fa-expand"></i> kliknij na zdjęcie
-</div>
+    <div class="gallery" id="galleryContainer">
 
-<div class="footer">
-    <span><i class="fab fa-discord"></i> @xeonzi</span>
-    <span><i class="fas fa-camera"></i> Sony A58 · 18-55mm</span>
+        <div class="photo-card">
+            <img src="https://ik.imagekit.io/y5xibwdltl/DSC05653.jpeg" alt="">
+        </div>
+        <div class="photo-card">
+            <img src="https://ik.imagekit.io/y5xibwdltl/DSC05552-2.jpg" alt="">
+        </div>
+        <div class="photo-card">
+            <img src="https://ik.imagekit.io/y5xibwdltl/DSC05576.jpg" alt="">
+        </div>
+        <div class="photo-card">
+            <img src="https://ik.imagekit.io/y5xibwdltl/DSC05628.jpg" alt="">
+        </div>
+        <div class="photo-card">
+            <img src="https://ik.imagekit.io/y5xibwdltl/DSC05616.jpg" alt="">
+        </div>
+        <div class="photo-card">
+            <img src="https://ik.imagekit.io/y5xibwdltl/DSC05650.jpeg" alt="">
+        </div>
+        <div class="photo-card">
+            <img src="https://ik.imagekit.io/y5xibwdltl/DSC05629.jpg" alt="">
+        </div>
+        <div class="photo-card">
+            <img src="https://ik.imagekit.io/y5xibwdltl/DSC05631.jpg" alt="">
+        </div>
+        <div class="photo-card">
+            <img src="https://ik.imagekit.io/y5xibwdltl/DSC05549.jpg" alt="">
+        </div>
+        <div class="photo-card">
+            <img src="https://ik.imagekit.io/y5xibwdltl/DSC05612.jpg" alt="">
+        </div>
+        <div class="photo-card">
+            <img src="https://ik.imagekit.io/y5xibwdltl/DSC05606.jpg" alt="">
+        </div>
+        <div class="photo-card">
+            <img src="https://ik.imagekit.io/y5xibwdltl/DSC05610.jpg" alt="">
+        </div>
+    </div>
+
+    <footer class="site-footer">
+        <div class="footer-content">
+            <div class="footer-item">
+                <i class="fab fa-discord"></i>
+                <a href="#" target="_blank">@xeonzi</a>
+            </div>
+            <div class="footer-item">
+                <i class="fas fa-camera"></i>
+                <span>Sony SLT-A58 · 18-55mm</span>
+            </div>
+        </div>
+    </footer>
 </div>
 
 <div id="lightbox" class="lightbox">
@@ -175,52 +305,10 @@
 
 <script>
     (function() {
-        // ========== ZDJĘCIA – LOSOWANIE KOLEJNOŚCI ==========
-        const rawImages = [
-            "https://ik.imagekit.io/y5xibwdltl/DSC05653.jpeg",
-            "https://ik.imagekit.io/y5xibwdltl/DSC05552-2.jpg",
-            "https://ik.imagekit.io/y5xibwdltl/DSC05576.jpg",
-            "https://ik.imagekit.io/y5xibwdltl/DSC05628.jpg",
-            "https://ik.imagekit.io/y5xibwdltl/DSC05616.jpg",
-            "https://ik.imagekit.io/y5xibwdltl/DSC05650.jpeg",
-            "https://ik.imagekit.io/y5xibwdltl/DSC05629.jpg",
-            "https://ik.imagekit.io/y5xibwdltl/DSC05631.jpg",
-            "https://ik.imagekit.io/y5xibwdltl/DSC05549.jpg",
-            "https://ik.imagekit.io/y5xibwdltl/DSC05612.jpg",
-            "https://ik.imagekit.io/y5xibwdltl/DSC05606.jpg",
-            "https://ik.imagekit.io/y5xibwdltl/DSC05610.jpg"
-        ];
-
-        // LOSOWANIE KOLEJNOŚCI ZDJĘĆ
-        function shuffleArray(arr) {
-            for (let i = arr.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [arr[i], arr[j]] = [arr[j], arr[i]];
-            }
-            return arr;
-        }
-
-        const IMAGES = shuffleArray([...rawImages]);
-
-        let currentIndex = 0;
-        const VISIBLE_BACK_CARDS = 3;
-        const Y_OFFSET = -14;
-        const SCALE_STEP = 0.025;
-        
-        let scrollAccumulator = 0;
-        let lastUpdateTime = Date.now();
-        let isAnimating = false;
-
-        const container = document.getElementById('timeMachine');
-        const stack = document.getElementById('cardsStack');
-        
+        const cards = document.querySelectorAll('.photo-card');
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
         const closeBtn = document.querySelector('.close-lightbox');
-        
-        function getImageIndex(index) {
-            return ((index % IMAGES.length) + IMAGES.length) % IMAGES.length;
-        }
 
         function openLightbox(imgSrc) {
             lightboxImg.src = imgSrc;
@@ -233,87 +321,24 @@
             document.body.style.overflow = '';
             setTimeout(() => {
                 if (!lightbox.classList.contains('active')) lightboxImg.src = '';
-            }, 200);
+            }, 150);
         }
 
-        function updateCards() {
-            stack.innerHTML = '';
-            
-            for (let offset = 0; offset <= VISIBLE_BACK_CARDS; offset++) {
-                const cardIndex = currentIndex + offset;
-                const imgSrc = IMAGES[getImageIndex(cardIndex)];
-                
-                const y = offset * Y_OFFSET;
-                const scale = 1 - (offset * SCALE_STEP);
-                const zIndex = 1000 - offset;
-                
-                const card = document.createElement('div');
-                card.className = 'card';
-                card.style.transform = `translateY(${y}px) scale(${scale})`;
-                card.style.zIndex = zIndex;
-                
-                card.innerHTML = `<img src="${imgSrc}" alt="" loading="lazy">`;
-                
-                card.addEventListener('click', (e) => {
-                    e.stopPropagation();
-                    openLightbox(imgSrc);
-                });
-                
-                stack.appendChild(card);
-            }
-        }
+        cards.forEach(card => {
+            card.addEventListener('click', (e) => {
+                e.stopPropagation();
+                const img = card.querySelector('img');
+                if (img && img.src) openLightbox(img.src);
+            });
+        });
 
-        function nextCard() {
-            if (isAnimating) return;
-            isAnimating = true;
-            currentIndex++;
-            updateCards();
-            setTimeout(() => { isAnimating = false; }, 600);
-        }
-
-        function prevCard() {
-            if (isAnimating) return;
-            isAnimating = true;
-            currentIndex--;
-            updateCards();
-            setTimeout(() => { isAnimating = false; }, 600);
-        }
-
-        const SCROLL_THRESHOLD = 40;
-        const MIN_UPDATE_INTERVAL = 75;
-
-        function handleWheel(e) {
-            e.preventDefault();
-            if (isAnimating) return;
-            
-            scrollAccumulator += e.deltaY;
-            
-            const now = Date.now();
-            if (Math.abs(scrollAccumulator) >= SCROLL_THRESHOLD && now - lastUpdateTime >= MIN_UPDATE_INTERVAL) {
-                if (scrollAccumulator > 0) nextCard();
-                else prevCard();
-                scrollAccumulator = 0;
-                lastUpdateTime = now;
-            }
-        }
-        
-        function onKeyDown(e) {
-            if (isAnimating) return;
-            if (e.key === 'ArrowRight') { nextCard(); e.preventDefault(); }
-            else if (e.key === 'ArrowLeft') { prevCard(); e.preventDefault(); }
-            else if (e.key === 'Escape' && lightbox.classList.contains('active')) { closeLightbox(); }
-        }
-        
-        container.addEventListener('wheel', handleWheel, { passive: false });
-        document.addEventListener('keydown', onKeyDown);
-        
         lightbox.addEventListener('click', (e) => {
             if (e.target === lightbox || e.target === closeBtn) closeLightbox();
         });
-        
-        updateCards();
-        
-        console.log('Time Machine – instrukcja wyśrodkowana, losowa kolejność zdjęć!');
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && lightbox.classList.contains('active')) closeLightbox();
+        });
     })();
 </script>
 </body>
