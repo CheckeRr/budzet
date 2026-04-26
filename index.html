@@ -2,353 +2,312 @@
 <html lang="pl">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Photos | @xeonzi</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@400..700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>#xeonzi</title>
+    <meta name="theme-color" content="#ffffff">
+
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        *,*::before,*::after{box-sizing:border-box}
+        html{font-size:62.5%;-webkit-tap-highlight-color:transparent;-webkit-font-smoothing:antialiased}
+        body{font-family:'Inter','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:140%;line-height:1.5;color:#000;background:#fff;margin:0;overflow-x:hidden}
+        img{max-width:100%;vertical-align:middle;border:0}
+        a{color:#000;text-decoration:none;transition:opacity .2s}
+        a:hover{opacity:.4}
+        ul{list-style:none;margin:0;padding:0}
+        .wrapper{padding-left:250px;min-height:100vh}
+        .header-wrapper{z-index:1000;position:fixed;left:250px;width:250px;height:100%;margin-left:-250px;top:0;background:#fff;display:flex;flex-direction:column;justify-content:space-between}
+        .header{position:relative;width:250px;margin:0;padding:24px 30px;display:flex;flex-direction:column}
+        .logo{margin-bottom:40px;padding-left:20px}
+        .logo a{display:block;line-height:1}
+        .logo-img{height:auto;width:130px;display:block}
+        #header-menu{padding-left:20px}
+        #header-menu ul{display:flex;flex-direction:column;gap:2px}
+        #header-menu li a{font-size:12px;font-weight:400;letter-spacing:.06em;color:#000;text-transform:uppercase;display:inline-block;padding:4px 0}
+        #header-menu li a.active{opacity:.4}
+        .nav-button{display:none}
+        main{position:relative;margin:30px 30px 30px 0}
+        .packery-grid{position:relative;width:100%}
+        .packery-gutter-sizer{width:2%;margin:0}
+        .packery-grid-sizer,.packery-grid-item{width:32%;margin:0}
+        .packery-grid-item.w2{width:66%}
+        .packery-grid-item{margin-bottom:2%;cursor:pointer;position:relative;background:#f5f5f5;transition:opacity .25s;float:left}
+        .packery-grid-item:hover{opacity:.7}
+        .packery-wrapper{position:relative;width:100%}
+        .packery-inner{position:absolute;top:0;bottom:0;left:0;right:0;overflow:hidden}
+        .packery-inner img{position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover}
+        .packery-grid-item.loading{background:#f0f0f0;animation:shimmer 1.5s infinite}
+        @keyframes shimmer{0%{background:#f0f0f0}50%{background:#e8e8e8}100%{background:#f0f0f0}}
 
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(145deg, #fef9f2 0%, #fff5ed 100%);
-            color: #4a3b2f;
-            min-height: 100vh;
-        }
-
-        /* Główna treść */
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 80px 48px 60px;
-        }
-
-        .hero {
-            text-align: center;
-            margin-bottom: 100px;
-            padding-top: 40px;
-            animation: fadeSlideUp 0.8s ease;
-        }
-
-        @keyframes fadeSlideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        .hero h1 {
-            font-family: 'Dancing Script', cursive;
-            font-size: clamp(9rem, 12vw, 8rem);
-            font-weight: 400;
-            background: linear-gradient(135deg, #e8b88a 0%, #d4a373 40%, #c49a6c 70%, #b8895a 100%);
-            background-clip: text;
-            -webkit-background-clip: text;
-            color: transparent;
-            margin-bottom: 8px;
-            animation: subtleFloat 4s ease-in-out infinite;
-            display: inline-block;
-        }
-
-        @keyframes subtleFloat {
-            0%, 100% {
-                transform: translateY(0px);
-            }
-            50% {
-                transform: translateY(-4px);
-            }
-        }
-
-        /* Kontener na info – większy odstęp od nazwy */
-        .hero-info {
-            margin-top: 32px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-        }
-
-        .hero-info p {
-            font-family: 'Space Mono', monospace;
-            font-size: 0.75rem;
-            font-weight: 500;
-            color: #cbb292;
-            letter-spacing: 4px;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .hero-info p i {
-            font-size: 0.8rem;
-            color: #c4a07a;
-        }
-
-        /* ========== POLAROIDY ========== */
-        .polaroid-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 48px 36px;
-        }
-
-        .polaroid {
-            background: #ffffff;
-            padding: 16px 16px 42px 16px;
-            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.04);
-            transition: all 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1);
-            cursor: pointer;
-            border-radius: 2px;
-            animation: cardFloatIn 0.6s ease backwards;
-            animation-delay: calc(var(--order, 0) * 0.05s);
-        }
-
-        @keyframes cardFloatIn {
-            from {
-                opacity: 0;
-                transform: translateY(50px) rotate(0deg);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) rotate(var(--rotate-start, 0deg));
-            }
-        }
-
-        .polaroid:nth-child(odd) {
-            --rotate-start: -0.6deg;
-            transform: rotate(-0.6deg);
-        }
-        .polaroid:nth-child(even) {
-            --rotate-start: 0.5deg;
-            transform: rotate(0.5deg);
-        }
-        .polaroid:hover {
-            transform: translateY(-10px) rotate(0deg);
-            box-shadow: 0 28px 40px rgba(100, 70, 40, 0.12);
-        }
-
-        .polaroid img {
-            width: 100%;
-            aspect-ratio: 4 / 5;
-            object-fit: cover;
-            display: block;
-            transition: filter 0.3s ease;
-        }
-
-        .polaroid:hover img {
-            filter: brightness(1.02) contrast(1.02);
-        }
+        /* 4 kolumny */
+        @media(min-width:59.6875em){.packery-gutter-sizer{width:2%}.packery-grid-sizer,.packery-grid-item{width:23.5%}.packery-grid-item.w2{width:49%}.packery-grid-item{margin-bottom:2%}}
+        /* 5 kolumn */
+        @media(min-width:90.063em){.packery-gutter-sizer{width:1.5%}.packery-grid-sizer,.packery-grid-item{width:18.8%}.packery-grid-item.w2{width:39.1%}.packery-grid-item{margin-bottom:1.5%}}
 
         /* Lightbox */
-        .lightbox {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(254, 249, 242, 0.98);
-            backdrop-filter: blur(16px);
-            z-index: 1000;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            visibility: hidden;
-            opacity: 0;
-            transition: visibility 0.25s, opacity 0.25s ease;
-            cursor: pointer;
-        }
+        .lightbox{position:fixed;inset:0;z-index:10000;background:rgba(255,255,255,.98);display:flex;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity .4s;cursor:pointer}
+        .lightbox.active{opacity:1;pointer-events:auto}
+        .lightbox-image-wrap{position:relative;display:flex;align-items:center;justify-content:center;max-width:90vw;max-height:86vh;z-index:10001;cursor:default}
+        .lightbox-image-wrap img{max-width:90vw;max-height:86vh;object-fit:contain;box-shadow:0 0 0 1px rgba(0,0,0,.04),0 20px 60px rgba(0,0,0,.08);transition:opacity .4s,transform .4s}
+        .lightbox-image-wrap img.switching{opacity:0;transform:scale(.97)}
+        .lightbox-close{position:fixed;top:24px;right:28px;z-index:10010;width:48px;height:48px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:0;border:0;color:#999;font-size:32px;font-weight:200;line-height:1;transition:color .2s,transform .2s;font-family:inherit;padding:0}
+        .lightbox-close:hover{color:#000;transform:scale(1.1)}
+        .lightbox-nav{position:fixed;top:50%;transform:translateY(-50%);z-index:10010;width:56px;height:56px;display:flex;align-items:center;justify-content:center;cursor:pointer;background:0;border:0;color:#bbb;font-size:42px;font-weight:200;line-height:1;transition:color .2s;font-family:inherit;padding:0;opacity:0}
+        .lightbox.active .lightbox-nav{opacity:1;transition:opacity .4s .15s,color .2s}
+        .lightbox-nav:hover{color:#000}
+        .lightbox-prev{left:16px}.lightbox-next{right:16px}
+        .lightbox-counter{position:fixed;bottom:30px;left:50%;transform:translateX(-50%);z-index:10010;font-size:12px;font-weight:400;letter-spacing:.08em;color:#999;pointer-events:none}
+        .footer{width:100%;text-align:center;padding:50px 20px 40px;font-size:11px;font-weight:400;letter-spacing:.08em;color:#bbb;text-transform:uppercase;background:#fff;clear:both}
 
-        .lightbox.active {
-            visibility: visible;
-            opacity: 1;
+        /* Mobile */
+        @media(max-width:768px){
+            .wrapper{padding-left:0}
+            .header-wrapper{position:static;width:auto;height:auto;margin-left:0;padding:0;background:#fff;z-index:100}
+            .header{position:static;width:auto;margin:0;padding:12px 16px;flex-direction:row;align-items:center;justify-content:space-between}
+            .logo{margin-bottom:0;padding-left:0}
+            .logo-img{height:40px;width:auto}
+            #header-menu{display:none;padding-left:0}
+            #header-menu.toggle{display:block;position:absolute;top:70px;left:0;width:100%;background:#fff;padding:20px;border-bottom:1px solid #eee;z-index:999}
+            #header-menu ul{gap:4px}
+            #header-menu li a{font-size:14px;padding:6px 0}
+            .nav-button{display:block;background:0;border:0;width:44px;height:44px;cursor:pointer;position:relative;padding:0}
+            .nav-button::before,.nav-button::after{content:'';position:absolute;left:10px;width:24px;height:2px;background:#000;transition:transform .25s}
+            .nav-button::before{top:16px}.nav-button::after{bottom:16px}
+            .nav-button.active::before{transform:rotate(45deg)translate(5px,5px);top:21px}
+            .nav-button.active::after{transform:rotate(-45deg)translate(5px,-5px);bottom:21px}
+            main{margin:10px}
+            .packery-gutter-sizer{width:3%}
+            .packery-grid-sizer,.packery-grid-item{width:48.5%}
+            .packery-grid-item.w2{width:100%}
+            .packery-grid-item{margin-bottom:3%}
+            .lightbox-image-wrap{max-width:94vw;max-height:82vh}
+            .lightbox-image-wrap img{max-width:94vw;max-height:82vh}
+            .lightbox-close{top:14px;right:14px;width:40px;height:40px;font-size:26px}
+            .lightbox-nav{width:40px;height:40px;font-size:32px}
+            .lightbox-prev{left:4px}.lightbox-next{right:4px}
+            .lightbox-counter{bottom:20px;font-size:10px}
+            .footer{padding:30px 16px}
         }
-
-        .lightbox-frame {
-            background: white;
-            padding: 20px 20px 38px 20px;
-            box-shadow: 0 30px 50px rgba(0, 0, 0, 0.1);
-            max-width: 88%;
-            max-height: 88%;
-            transform: scale(0.92);
-            opacity: 0;
-            transition: transform 0.35s cubic-bezier(0.2, 0.9, 0.4, 1.1), opacity 0.3s ease;
-        }
-
-        .lightbox.active .lightbox-frame {
-            transform: scale(1);
-            opacity: 1;
-        }
-
-        .lightbox-img {
-            max-width: 100%;
-            max-height: 70vh;
-            object-fit: contain;
-            display: block;
-        }
-
-        .close-lb {
-            position: absolute;
-            top: 28px;
-            right: 36px;
-            font-size: 1.6rem;
-            font-weight: 300;
-            color: #c4a07a;
-            cursor: pointer;
-            transition: all 0.25s;
-            width: 44px;
-            height: 44px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 50%;
-            background: rgba(200, 170, 140, 0.1);
-        }
-
-        .close-lb:hover {
-            background: rgba(200, 170, 140, 0.2);
-            transform: rotate(90deg);
-            color: #a07858;
-        }
-
-        /* Responsywność */
-        @media (max-width: 800px) {
-            .container {
-                padding: 60px 28px 40px;
-            }
-            .hero {
-                margin-bottom: 70px;
-            }
-            .polaroid-grid {
-                gap: 36px 28px;
-            }
-            .hero-info {
-                margin-top: 28px;
-            }
-            .hero-info p {
-                font-size: 0.65rem;
-                letter-spacing: 3px;
-            }
-        }
-
-        @media (max-width: 600px) {
-            .polaroid-grid {
-                grid-template-columns: 1fr;
-                gap: 40px;
-            }
-            .hero h1 {
-                font-size: 3.2rem;
-            }
-            .container {
-                padding: 50px 20px 40px;
-            }
-            .close-lb {
-                top: 18px;
-                right: 18px;
-                width: 38px;
-                height: 38px;
-            }
-            .hero-info {
-                margin-top: 24px;
-            }
-            .hero-info p {
-                font-size: 0.6rem;
-                letter-spacing: 2px;
-            }
+        @media(max-width:480px){
+            .packery-grid-sizer,.packery-grid-item{width:100%}
+            .packery-grid-item.w2{width:100%}
+            .packery-grid-item{margin-bottom:4%}
+            main{margin:6px}
         }
     </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..500&display=swap" rel="stylesheet">
 </head>
 <body>
 
-<div class="container">
-    <div class="hero">
-        <h1>Xeonzi</h1>
-        <div class="hero-info">
-            <p><i class="fab fa-discord"></i> @xeonzi</p>
-            <p><i class="fas fa-camera"></i> Sony A6400 · 35mm f/1.8</p>
+<div class="wrapper">
+
+    <!-- SIDEBAR -->
+    <div class="header-wrapper">
+        <header class="header">
+            <div class="logo">
+                <a href="#">
+                    <img src="logo.jpg" alt="#xeonzi" class="logo-img">
+                </a>
+            </div>
+            <button class="nav-button" id="navButton" aria-label="Menu"></button>
+            <nav id="mainNav">
+                <div id="header-menu" class="menu">
+                    <ul>
+                        <li><a href="#" class="active" data-filter="all">HOME</a></li>
+                        <li><a href="#" data-filter="street">STREET</a></li>
+                        <li><a href="#" data-filter="cars">CARS</a></li>
+                        <li><a href="#" data-filter="nature">NATURE</a></li>
+                        <li><a href="#" data-filter="other">OTHER</a></li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+    </div>
+
+    <!-- GALERIA -->
+    <main>
+        <div class="packery-grid" id="packeryGrid">
+            <div class="packery-gutter-sizer"></div>
+            <div class="packery-grid-sizer"></div>
         </div>
-    </div>
+    </main>
 
-    <div class="polaroid-grid" id="polaroidGrid"></div>
+    <!-- STOPKA -->
+    <footer class="footer">&copy; 2026 #xeonzi</footer>
+
 </div>
 
-<div id="lightbox" class="lightbox">
-    <span class="close-lb"><i class="fas fa-times"></i></span>
-    <div class="lightbox-frame">
-        <img class="lightbox-img" id="lightboxImg" alt="">
+<!-- LIGHTBOX -->
+<div class="lightbox" id="lightbox" aria-hidden="true">
+    <button class="lightbox-close" id="lightboxClose">&times;</button>
+    <button class="lightbox-nav lightbox-prev" id="lightboxPrev">‹</button>
+    <button class="lightbox-nav lightbox-next" id="lightboxNext">›</button>
+    <div class="lightbox-image-wrap">
+        <img src="" alt="" id="lightboxImg">
     </div>
+    <span class="lightbox-counter" id="lightboxCounter"></span>
 </div>
+
+<!-- PACKERY + IMAGESLOADED -->
+<script src="https://unpkg.com/packery@2/dist/packery.pkgd.min.js"></script>
+<script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
 
 <script>
+(function(){
+    // ============================================================
+    // 👇 TU DODAJESZ SWOJE ZDJĘCIA – tylko 3 pola do wpisania 👇
+    // ============================================================
+    // src: ścieżka do zdjęcia
+    // cat: kategoria – 'street' | 'cars' | 'nature' | 'other'
+    // w2:  true = szerokie (2 kolumny), false = normalne (1 kolumna)
+    // ============================================================
     const photos = [
-        "https://ik.imagekit.io/y5xibwdltl/_DSC5721.jpg",
-        "https://ik.imagekit.io/y5xibwdltl/_DSC5689.jpg",
-        "https://ik.imagekit.io/y5xibwdltl/_DSC5707.jpg",
-        "https://ik.imagekit.io/y5xibwdltl/_DSC5710.jpg",
-        "https://ik.imagekit.io/y5xibwdltl/DSC05552-2.jpg?updatedAt=1775505143236",
-        "https://ik.imagekit.io/y5xibwdltl/DSC05576.jpg?updatedAt=1775505143031",
-        "https://ik.imagekit.io/y5xibwdltl/_DSC5672.jpg",
-        "https://ik.imagekit.io/y5xibwdltl/DSC05653.jpeg?updatedAt=1775505141116",
-        "https://ik.imagekit.io/y5xibwdltl/DSC05650.jpeg?updatedAt=1775505141049",
-        "https://ik.imagekit.io/y5xibwdltl/DSC05628.jpg?updatedAt=1775505141199",
-        "https://ik.imagekit.io/y5xibwdltl/DSC05629.jpg?updatedAt=1775505140989",
-        "https://ik.imagekit.io/y5xibwdltl/DSC05631.jpg?updatedAt=1775505140866",
-        "https://ik.imagekit.io/y5xibwdltl/DSC05616.jpg?updatedAt=1775505141125",
-        "https://ik.imagekit.io/y5xibwdltl/DSC05612.jpg?updatedAt=1775505140681",
-        "https://ik.imagekit.io/y5xibwdltl/DSC05606.jpg?updatedAt=1775505140582",
-        "https://ik.imagekit.io/y5xibwdltl/DSC05610.jpg?updatedAt=1775505140513"
+        // STREET
+        { src:'https://ik.imagekit.io/y5xibwdltl/_DSC5759.jpg', cat:'street', w2:false },
+        { src:'https://ik.imagekit.io/y5xibwdltl/_DSC5672.jpg?updatedAt=1775941428335', cat:'street', w2:true  },
+        { src:'https://ik.imagekit.io/y5xibwdltl/DSC05653.jpeg?updatedAt=1775505141116', cat:'street', w2:false },
+
+        // CARS
+        { src:'https://ik.imagekit.io/y5xibwdltl/_DSC5721.jpg',  cat:'cars',   w2:false },
+        { src:'https://ik.imagekit.io/y5xibwdltl/_DSC5689.jpg',  cat:'cars',   w2:false },
+        { src:'https://ik.imagekit.io/y5xibwdltl/_DSC5707.jpg',  cat:'cars',   w2:false },
+        { src:'https://ik.imagekit.io/y5xibwdltl/_DSC5710.jpg',  cat:'cars',   w2:false },
+        { src:'https://ik.imagekit.io/y5xibwdltl/_DSC5724.jpg',  cat:'cars',   w2:true },
+        { src:'https://ik.imagekit.io/y5xibwdltl/_DSC5731.jpg',  cat:'cars',   w2:false },
+        { src:'https://ik.imagekit.io/y5xibwdltl/_DSC5732.jpg',  cat:'cars',   w2:false },
+        { src:'https://ik.imagekit.io/y5xibwdltl/_DSC5735.jpg',  cat:'cars',   w2:false },
+        { src:'https://ik.imagekit.io/y5xibwdltl/_DSC5734.jpg',  cat:'cars',   w2:false },
+
+        // NATURE
+        { src:'https://ik.imagekit.io/y5xibwdltl/_DSC5741.jpg',cat:'nature', w2:false  },
+        { src:'https://ik.imagekit.io/y5xibwdltl/_DSC5744.jpg',cat:'nature', w2:true },
+        { src:'https://ik.imagekit.io/y5xibwdltl/_DSC5745.jpg',cat:'nature', w2:false },
+
+        // OTHER
+        { src:'https://ik.imagekit.io/y5xibwdltl/_DSC5769.jpg', cat:'other',  w2:false },
+        { src:'https://ik.imagekit.io/y5xibwdltl/_DSC5767.jpg', cat:'other',  w2:true  },
+        { src:'https://ik.imagekit.io/y5xibwdltl/DSC05629.jpg?updatedAt=1775505140989', cat:'other',  w2:false },
     ];
 
-    const polaroidGrid = document.getElementById('polaroidGrid');
-    const lightbox = document.getElementById('lightbox');
-    const lightboxImg = document.getElementById('lightboxImg');
-    const closeBtn = document.querySelector('.close-lb');
+    // ==================== RESZTA DZIAŁA AUTOMATYCZNIE ====================
+    const grid = document.getElementById('packeryGrid');
+    const lb = document.getElementById('lightbox');
+    const lbImg = document.getElementById('lightboxImg');
+    const lbCounter = document.getElementById('lightboxCounter');
+    const navBtn = document.getElementById('navButton');
+    const menu = document.getElementById('header-menu');
+    const navLinks = menu.querySelectorAll('a[data-filter]');
 
-    function renderPolaroids() {
-        polaroidGrid.innerHTML = '';
-        photos.forEach((src, idx) => {
-            const polaroid = document.createElement('div');
-            polaroid.className = 'polaroid';
-            polaroid.style.setProperty('--order', idx);
-            polaroid.innerHTML = `<img src="${src}" alt="zdjęcie ${idx + 1}" loading="lazy">`;
-            polaroid.addEventListener('click', () => openLightbox(src));
-            polaroidGrid.appendChild(polaroid);
+    let currentIdx = 0, lbOpen = false, lastFocus = null, pckry = null;
+    let filtered = [...photos];
+
+    // Hamburger
+    navBtn.onclick = () => {
+        const a = navBtn.classList.toggle('active');
+        menu.classList.toggle('toggle');
+        navBtn.setAttribute('aria-expanded',a);
+    };
+
+    // Filtry
+    navLinks.forEach(l => l.onclick = e => {
+        e.preventDefault();
+        navLinks.forEach(x => x.classList.remove('active'));
+        l.classList.add('active');
+        const f = l.dataset.filter;
+        filtered = f === 'all' ? [...photos] : photos.filter(p => p.cat === f);
+        build();
+        if(window.innerWidth <= 768){ navBtn.classList.remove('active'); menu.classList.remove('toggle'); }
+    });
+
+    // Budowanie galerii
+    function build(){
+        grid.querySelectorAll('.packery-grid-item').forEach(el => el.remove());
+        if(pckry){ pckry.destroy(); pckry = null; }
+        const frag = document.createDocumentFragment();
+        filtered.forEach((p,i) => {
+            const div = document.createElement('div');
+            div.className = 'packery-grid-item loading';
+            if(p.w2) div.classList.add('w2');
+            div.dataset.idx = i;
+            const wrap = document.createElement('div');
+            wrap.className = 'packery-wrapper';
+            wrap.style.paddingBottom = p.paddingBottom || '150%'; // fallback
+            const inner = document.createElement('div');
+            inner.className = 'packery-inner';
+            const img = document.createElement('img');
+            img.src = p.src;
+            img.alt = p.cat + ' ' + (i+1);
+            img.style.cssText = 'position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;';
+            img.onload = () => { div.classList.remove('loading'); if(pckry) pckry.layout(); };
+            img.onerror = () => { div.classList.remove('loading'); div.style.background='#e0e0e0'; };
+            inner.appendChild(img);
+            wrap.appendChild(inner);
+            div.appendChild(wrap);
+            div.onclick = () => openLb(i);
+            frag.appendChild(div);
+        });
+        grid.appendChild(frag);
+        imagesLoaded(grid, () => {
+            pckry = new Packery(grid, {
+                itemSelector:'.packery-grid-item',
+                gutter:'.packery-gutter-sizer',
+                columnWidth:'.packery-grid-sizer',
+                percentPosition:true,
+                transitionDuration:'0.3s'
+            });
+            grid.querySelectorAll('.packery-grid-item.loading').forEach(el => el.classList.remove('loading'));
         });
     }
 
-    function openLightbox(src) {
-        lightboxImg.src = src;
-        lightbox.classList.add('active');
+    // Lightbox
+    function openLb(i){
+        if(!filtered[i]) return;
+        currentIdx = i; lbOpen = true; lastFocus = document.activeElement;
+        updateLb(); lb.classList.add('active'); lb.setAttribute('aria-hidden','false');
         document.body.style.overflow = 'hidden';
+        setTimeout(() => document.getElementById('lightboxClose').focus(), 100);
     }
-
-    function closeLightbox() {
-        lightbox.classList.remove('active');
+    function closeLb(){
+        lbOpen = false; lb.classList.remove('active'); lb.setAttribute('aria-hidden','true');
         document.body.style.overflow = '';
+        if(lastFocus && lastFocus.focus) setTimeout(() => lastFocus.focus(), 100);
     }
+    function updateLb(){
+        const p = filtered[currentIdx];
+        lbImg.classList.add('switching');
+        lbCounter.textContent = (currentIdx+1) + ' / ' + filtered.length;
+        setTimeout(() => { lbImg.src = p.src; lbImg.alt = p.cat; lbImg.classList.remove('switching'); }, 200);
+    }
+    function prev(){ currentIdx = (currentIdx-1+filtered.length) % filtered.length; updateLb(); }
+    function next(){ currentIdx = (currentIdx+1) % filtered.length; updateLb(); }
 
-    closeBtn.addEventListener('click', closeLightbox);
-    lightbox.addEventListener('click', (e) => {
-        if (e.target === lightbox || e.target.classList.contains('lightbox-frame')) {
-            closeLightbox();
-        }
+    document.getElementById('lightboxClose').onclick = e => { e.stopPropagation(); closeLb(); };
+    document.getElementById('lightboxPrev').onclick = e => { e.stopPropagation(); prev(); };
+    document.getElementById('lightboxNext').onclick = e => { e.stopPropagation(); next(); };
+    lb.onclick = e => { if(e.target === lb) closeLb(); };
+    document.querySelector('.lightbox-image-wrap').onclick = e => {
+        e.stopPropagation(); if(e.target.tagName !== 'BUTTON') next();
+    };
+    document.onkeydown = e => {
+        if(!lbOpen) return;
+        if(e.key === 'Escape') closeLb();
+        if(e.key === 'ArrowLeft') prev();
+        if(e.key === 'ArrowRight') next();
+    };
+    let tx = 0;
+    lb.addEventListener('touchstart', e => { tx = e.changedTouches[0].screenX; }, {passive:true});
+    lb.addEventListener('touchend', e => {
+        if(!lbOpen) return;
+        const d = tx - e.changedTouches[0].screenX;
+        if(Math.abs(d) > 60) d > 0 ? next() : prev();
+        tx = 0;
     });
 
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && lightbox.classList.contains('active')) {
-            closeLightbox();
-        }
-    });
+    window.addEventListener('resize', () => { if(pckry) pckry.layout(); });
 
-    renderPolaroids();
+    build();
+})();
 </script>
 </body>
 </html>
